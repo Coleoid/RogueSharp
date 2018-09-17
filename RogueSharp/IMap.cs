@@ -103,6 +103,8 @@ namespace RogueSharp
       /// <returns>True if the Cell has been flagged as being explored by the player, false otherwise</returns>
       bool IsExplored( int x, int y );
 
+      void SetCellExplored(ICell cell, bool isExplored);
+
       /// <summary>
       /// Set the properties of a Cell to the specified values
       /// </summary>

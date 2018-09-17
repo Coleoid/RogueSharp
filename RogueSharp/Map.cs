@@ -147,6 +147,12 @@ namespace RogueSharp
          return _isExplored[x, y];
       }
 
+      public void SetCellExplored(ICell cell, bool isExplored)
+      {
+         _isExplored[cell.X, cell.Y] = isExplored;
+      }
+
+
       /// <summary>
       /// Set the properties of a Cell to the specified values
       /// </summary>
