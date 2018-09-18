@@ -3,7 +3,7 @@
    /// <summary>
    /// A class that defines a square on a Map with all of its associated properties
    /// </summary>
-   public class Cell : ICell
+   public class Cell : ICell, ICoord
    {
       /// <summary>
       /// Construct a new Cell located at the specified x and y location with the specified properties

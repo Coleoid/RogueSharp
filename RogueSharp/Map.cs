@@ -147,11 +147,21 @@ namespace RogueSharp
          return _isExplored[x, y];
       }
 
-      public void SetCellExplored(ICell cell, bool isExplored)
+      public void SetIsExplored(ICoord coord, bool isExplored)
       {
-         _isExplored[cell.X, cell.Y] = isExplored;
+         _isExplored[coord.X, coord.Y] = isExplored;
       }
 
+      public void SetIsWalkable(ICoord coord, bool isWalkable)
+      {
+         _isExplored[coord.X, coord.Y] = isWalkable;
+      }
+
+      public ICell GetCellAt(ICoord coord)
+      {
+         if (coord is ICell cell) return cell;
+         return GetCell(coord.X, coord.Y);
+      }
 
       /// <summary>
       /// Set the properties of a Cell to the specified values

@@ -5,7 +5,7 @@ namespace RogueSharp
     /// <summary>
     /// A class that defines a square on a Map with all of its associated properties
     /// </summary>
-    public interface ICell : IEquatable<ICell>
+    public interface ICell : IEquatable<ICell>, ICoord
     {
         /// <summary>
         /// Gets the X location of the Cell starting with 0 as the farthest left
