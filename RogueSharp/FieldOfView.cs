@@ -57,9 +57,13 @@ namespace RogueSharp
       /// <param name="x">X location of the Cell to check starting with 0 as the farthest left</param>
       /// <param name="y">Y location of the Cell to check, starting with 0 as the top</param>
       /// <returns>True if the Cell is in the currently computed field-of-view, false otherwise</returns>
-      public bool IsInFov( int x, int y )
+      public bool IsInFov(int x, int y)
       {
-         return _inFov.Contains( _map.IndexFor( x, y ) );
+         return _inFov.Contains(_map.IndexFor(x, y));
+      }
+      public bool IsInFov(ICoord xy)
+      {
+         return _inFov.Contains(_map.IndexFor(xy));
       }
 
       /// <summary>

@@ -91,6 +91,10 @@ namespace RogueSharp
       {
          return _isTransparent[x, y];
       }
+      public bool IsTransparent(ICoord coord)
+      {
+         return _isTransparent[coord.X, coord.Y];
+      }
 
       /// <summary>
       /// Get the walkability of the Cell i.e. if a character could normally move across the Cell without difficulty
@@ -103,10 +107,15 @@ namespace RogueSharp
       /// <param name="x">X location of the Cell to check starting with 0 as the farthest left</param>
       /// <param name="y">Y location of the Cell to check, starting with 0 as the top</param>
       /// <returns>True if a character could move across this Cell, false otherwise</returns>
-      public bool IsWalkable( int x, int y )
+      public bool IsWalkable(int x, int y)
       {
          return _isWalkable[x, y];
       }
+      public bool IsWalkable(ICoord xy)
+      {
+         return _isWalkable[xy.X, xy.Y];
+      }
+
 
       /// <summary>
       /// Check if the Cell is in the currently computed field-of-view
@@ -123,9 +132,9 @@ namespace RogueSharp
       /// <param name="x">X location of the Cell to check starting with 0 as the farthest left</param>
       /// <param name="y">Y location of the Cell to check, starting with 0 as the top</param>
       /// <returns>True if the Cell is in the currently computed field-of-view, false otherwise</returns>
-      public bool IsInFov( int x, int y )
+      public bool IsInFov(ICoord xy)
       {
-         return _fieldOfView.IsInFov( x, y );
+         return _fieldOfView.IsInFov(xy);
       }
 
       /// <summary>
@@ -142,9 +151,13 @@ namespace RogueSharp
       /// <param name="x">X location of the Cell to check starting with 0 as the farthest left</param>
       /// <param name="y">Y location of the Cell to check, starting with 0 as the top</param>
       /// <returns>True if the Cell has been flagged as being explored by the player, false otherwise</returns>
-      public bool IsExplored( int x, int y )
+      public bool IsExplored(int x, int y)
       {
          return _isExplored[x, y];
+      }
+      public bool IsExplored(ICoord xy)
+      {
+         return _isExplored[xy.X, xy.Y];
       }
 
       public void SetIsExplored(ICoord coord, bool isExplored)
@@ -174,7 +187,7 @@ namespace RogueSharp
       /// <param name="isTransparent">True if line-of-sight is not blocked by this Cell. False otherwise</param>
       /// <param name="isWalkable">True if a character could walk across the Cell normally. False otherwise</param>
       /// <param name="isExplored">True if the Cell has ever been in the field-of-view of the player. False otherwise</param>
-      public void SetCellProperties( int x, int y, bool isTransparent, bool isWalkable, bool isExplored )
+      public void SetCellProperties(int x, int y, bool isTransparent, bool isWalkable, bool isExplored)
       {
          _isTransparent[x, y] = isTransparent;
          _isWalkable[x, y] = isWalkable;
@@ -822,14 +835,14 @@ namespace RogueSharp
       /// <param name="cell">The Cell to get the index for</param>
       /// <returns>An index for the Cell which is useful if storing Cells in a single dimensional array</returns>
       /// <exception cref="ArgumentNullException">Thrown on null cell</exception>
-      public int IndexFor( ICell cell )
+      public int IndexFor(ICoord cell)
       {
-         if ( cell == null )
+         if (cell == null)
          {
-            throw new ArgumentNullException( "cell", "Cell cannot be null" );
+            throw new ArgumentNullException("cell", "Cell cannot be null");
          }
 
-         return ( cell.Y * Width ) + cell.X;
+         return (cell.Y * Width) + cell.X;
       }
 
       private bool AddToHashSet( HashSet<int> hashSet, int x, int y, out ICell cell )
