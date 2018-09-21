@@ -137,20 +137,32 @@ namespace RogueSharp
          return new Path( cells );
       }
 
-      private IEnumerable<ICell> ShortestPathCells( ICell source, ICell destination )
+      public List<ICell> ShortestPathList(ICell source, ICell destination)
       {
-         IEnumerable<DirectedEdge> path = DijkstraShortestPath.FindPath( _graph, IndexFor( source ), IndexFor( destination ) );
-         if ( path == null )
+         var list = new List<ICell>();
+         IEnumerable<DirectedEdge> path = DijkstraShortestPath
+            .FindPath(_graph, IndexFor(source), IndexFor(destination));
+
+         if (path == null) return list;
+
+         foreach (DirectedEdge edge in path)
          {
-            yield return null;
+            list.Add(CellFor(edge.To));
          }
-         else
+
+         return list;
+      }
+
+      private IEnumerable<ICell> ShortestPathCells(ICell source, ICell destination)
+      {
+         IEnumerable<DirectedEdge> path = DijkstraShortestPath
+            .FindPath(_graph, IndexFor(source), IndexFor(destination));
+         if (path == null) yield break;
+
+         yield return source;
+         foreach (DirectedEdge edge in path)
          {
-            yield return source;
-            foreach ( DirectedEdge edge in path )
-            {
-               yield return CellFor( edge.To );
-            }
+            yield return CellFor(edge.To);
          }
       }
 
