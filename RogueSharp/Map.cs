@@ -167,7 +167,7 @@ namespace RogueSharp
 
       public void SetIsWalkable(ICoord coord, bool isWalkable)
       {
-         _isExplored[coord.X, coord.Y] = isWalkable;
+         _isWalkable[coord.X, coord.Y] = isWalkable;
       }
 
       public ICell GetCellAt(ICoord coord)
