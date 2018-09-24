@@ -137,6 +137,15 @@ namespace RogueSharp
          return _fieldOfView.IsInFov(xy);
       }
 
+      public bool IsWithinMap(ICoord coord)
+      {
+         return
+            coord.X > 0 &&
+            coord.Y > 0 &&
+            coord.X < Width &&
+            coord.Y < Height;
+      }
+
       /// <summary>
       /// Check if the Cell is flagged as ever having been explored by the player
       /// </summary>

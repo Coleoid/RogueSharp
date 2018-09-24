@@ -55,37 +55,70 @@ namespace RogueSharp
       /// On a standard cartesian map, it should be sqrt(2) (1.41)
       /// </param>
       /// <exception cref="ArgumentNullException">Thrown when a null map parameter is passed in</exception>
-      public PathFinder( IMap map, double diagonalCost )
+      public PathFinder(IMap map, double diagonalCost)
       {
-         if ( map == null )
+         if (map == null)
          {
-            throw new ArgumentNullException( "map", "Map cannot be null" );
+            throw new ArgumentNullException("map", "Map cannot be null");
          }
 
          _map = map;
-         _graph = new EdgeWeightedDigraph( _map.Width * _map.Height );
-         foreach ( ICell cell in _map.GetAllCells() )
+         _graph = new EdgeWeightedDigraph(_map.Width * _map.Height);
+         foreach (ICell cell in _map.GetAllCells())
          {
-            if ( cell.IsWalkable )
+            if (cell.IsWalkable)
             {
-               int v = IndexFor( cell );
-               foreach ( ICell neighbor in _map.GetBorderCellsInSquare( cell.X, cell.Y, 1 ) )
+               int v = IndexFor(cell);
+               foreach (ICell neighbor in _map.GetBorderCellsInSquare(cell.X, cell.Y, 1))
                {
-                  if ( neighbor.IsWalkable )
+                  if (neighbor.IsWalkable)
                   {
-                     int w = IndexFor( neighbor );
-                     if ( neighbor.X != cell.X && neighbor.Y != cell.Y )
+                     int w = IndexFor(neighbor);
+                     if (neighbor.X != cell.X && neighbor.Y != cell.Y)
                      {
-                        _graph.AddEdge( new DirectedEdge( v, w, diagonalCost ) );
-                        _graph.AddEdge( new DirectedEdge( w, v, diagonalCost ) );
+                        _graph.AddEdge(new DirectedEdge(v, w, diagonalCost));
+                        _graph.AddEdge(new DirectedEdge(w, v, diagonalCost));
                      }
                      else
                      {
-                        _graph.AddEdge( new DirectedEdge( v, w, 1.0 ) );
-                        _graph.AddEdge( new DirectedEdge( w, v, 1.0 ) );
+                        _graph.AddEdge(new DirectedEdge(v, w, 1.0));
+                        _graph.AddEdge(new DirectedEdge(w, v, 1.0));
                      }
                   }
                }
+            }
+         }
+      }
+
+      public PathFinder(IMap map, double cardinalCost, double diagonalCost)
+      {
+         _map = map ?? throw new ArgumentNullException("map");
+         _graph = new EdgeWeightedDigraph(_map.Width * _map.Height);
+
+         foreach (ICell cell in _map.GetAllCells())
+         {
+            if (!cell.IsWalkable) continue;
+
+            int cellIndex = IndexFor(cell);
+            var neighborCoords = new List<(ICoord,double)>
+            {
+               (new Coord(cell.X + 0, cell.Y - 1), cardinalCost),
+               (new Coord(cell.X + 0, cell.Y + 1), cardinalCost),
+               (new Coord(cell.X + 1, cell.Y + 0), cardinalCost),
+               (new Coord(cell.X - 1, cell.Y + 0), cardinalCost),
+               (new Coord(cell.X - 1, cell.Y - 1), diagonalCost),
+               (new Coord(cell.X - 1, cell.Y + 1), diagonalCost),
+               (new Coord(cell.X + 1, cell.Y - 1), diagonalCost),
+               (new Coord(cell.X + 1, cell.Y + 1), diagonalCost),
+            };
+
+            foreach (var (coord, cost) in neighborCoords)
+            {
+               if (!map.IsWithinMap(coord)) continue;
+               if (!map.IsWalkable(coord.X, coord.Y)) continue;
+
+               int neighborIndex = IndexFor(coord);
+               _graph.AddEdge(new DirectedEdge(cellIndex, neighborIndex, cost));
             }
          }
       }
@@ -166,7 +199,7 @@ namespace RogueSharp
          }
       }
 
-      private int IndexFor( ICell cell )
+      private int IndexFor( ICoord cell )
       {
          return ( cell.Y * _map.Width ) + cell.X;
       }

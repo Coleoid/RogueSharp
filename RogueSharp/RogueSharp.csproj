@@ -50,4 +50,8 @@ Breaking changes:
     <DocumentationFile>bin\Debug\netstandard1.0\RogueSharp.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
 </Project>

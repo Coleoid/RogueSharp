@@ -88,6 +88,7 @@ namespace RogueSharp
 
       void SetIsWalkable(ICoord coord, bool isWalkable);
       void SetIsExplored(ICoord coord, bool isExplored);
+      bool IsWithinMap(ICoord coord);
 
       /// <summary>
       /// Set the properties of a Cell to the specified values
