@@ -88,6 +88,7 @@ namespace RogueSharp
 
       void SetIsWalkable(ICoord coord, bool isWalkable);
       void SetIsExplored(ICoord coord, bool isExplored);
+      void SetIsTransparent(ICoord coord, bool isTransparent);
       bool IsWithinMap(ICoord coord);
 
       /// <summary>

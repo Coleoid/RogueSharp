@@ -179,6 +179,11 @@ namespace RogueSharp
          _isWalkable[coord.X, coord.Y] = isWalkable;
       }
 
+      public void SetIsTransparent(ICoord coord, bool isTransparent)
+      {
+         _isTransparent[coord.X, coord.Y] = isTransparent;
+      }
+
       public ICell GetCellAt(ICoord coord)
       {
          if (coord is ICell cell) return cell;
