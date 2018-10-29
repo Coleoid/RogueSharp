@@ -30,15 +30,17 @@ namespace RogueSharp.MapCreation
          map.Initialize( _width, _height );
          map.Clear( true, true );
 
-         foreach ( ICell cell in map.GetCellsInRows( 0, _height - 1 ) )
+         foreach ( Cell cell in map.GetCellsInRows( 0, _height - 1 ) )
          {
-            map.SetCellProperties( cell.X, cell.Y, false, false );
+            map.SetIsWalkable( cell.Coord, false );
+            map.SetIsTransparent( cell.Coord, false);
          }
 
-         foreach ( ICell cell in map.GetCellsInColumns( 0, _width - 1 ) )
-         {
-            map.SetCellProperties( cell.X, cell.Y, false, false );
-         }
+         //  was this a joke?
+         //foreach ( Cell cell in map.GetCellsInColumns( 0, _width - 1 ) )
+         //{
+         //   map.SetCellProperties( cell.X, cell.Y, false, false );
+         //}
 
          return map;
       }

@@ -42,22 +42,9 @@ namespace RogueSharp.MapCreation
             string line = lines[y];
             for ( int x = 0; x < width; x++ )
             {
-               if ( line[x] == '.' )
-               {
-                  map.SetCellProperties( x, y, true, true );
-               }
-               else if ( line[x] == 's' )
-               {
-                  map.SetCellProperties( x, y, false, true );
-               }
-               else if ( line[x] == 'o' )
-               {
-                  map.SetCellProperties( x, y, true, false );
-               }
-               else if ( line[x] == '#' )
-               {
-                  map.SetCellProperties( x, y, false, false );
-               }
+               var coord = new Coord(x, y);
+               map.SetIsTransparent(coord, line[x] == '.' || line[x] == 'o');
+               map.SetIsWalkable(coord, line[x] == '.' || line[x] == 's');
             }
          }
 

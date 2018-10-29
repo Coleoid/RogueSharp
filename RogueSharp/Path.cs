@@ -10,8 +10,8 @@ namespace RogueSharp
    /// </summary>
    public class Path
    {
-      private readonly LinkedList<ICell> _steps;
-      private LinkedListNode<ICell> _currentStep;
+      private readonly LinkedList<Cell> _steps;
+      private LinkedListNode<Cell> _currentStep;
 
       /// <summary>
       /// Construct a new Path from the specified ordered list of Cells
@@ -19,9 +19,9 @@ namespace RogueSharp
       /// <param name="steps">An IEnumerable of Cells that represent the ordered steps along this Path from Start to End</param>
       /// <exception cref="ArgumentNullException">Thrown when the specified steps parameter is null</exception>
       /// <exception cref="ArgumentException">Thrown when the specified steps parameter is empty</exception>
-      public Path( IEnumerable<ICell> steps )
+      public Path( IEnumerable<Cell> steps )
       {
-         _steps = new LinkedList<ICell>( steps );
+         _steps = new LinkedList<Cell>( steps );
 
          if ( _steps.Count < 1 )
          {
@@ -34,7 +34,7 @@ namespace RogueSharp
       /// <summary>
       /// The Cell representing the first step or Start of this Path
       /// </summary>
-      public ICell Start
+      public Cell Start
       {
          get
          {
@@ -45,7 +45,7 @@ namespace RogueSharp
       /// <summary>
       /// The Cell representing the last step or End of this Path
       /// </summary>
-      public ICell End
+      public Cell End
       {
          get
          {
@@ -67,7 +67,7 @@ namespace RogueSharp
       /// <summary>
       /// The Cell represeting the step that is currently occupied in this Path
       /// </summary>
-      public ICell CurrentStep
+      public Cell CurrentStep
       {
          get
          {
@@ -78,7 +78,7 @@ namespace RogueSharp
       /// <summary>
       /// All of the Cells representing the Steps in this Path from Start to End as an IEnumerable
       /// </summary>
-      public IEnumerable<ICell> Steps
+      public IEnumerable<Cell> Steps
       {
          get
          {
@@ -91,9 +91,9 @@ namespace RogueSharp
       /// </summary>
       /// <returns>A Cell representing the Step that was moved to as we advanced along the Path</returns>
       /// <exception cref="NoMoreStepsException">Thrown when attempting to move forward along a Path on which we are currently at the End</exception>
-      public ICell StepForward()
+      public Cell StepForward()
       {
-         ICell cell = TryStepForward();
+         Cell cell = TryStepForward();
 
          if ( cell == null )
          {
@@ -107,12 +107,12 @@ namespace RogueSharp
       /// Move forward along this Path and advance the CurrentStep to the next Step in the Path
       /// </summary>
       /// <returns>A Cell representing the Step that was moved to as we advanced along the Path. If there is not another Cell in the path to advance to null is returned</returns>
-      public ICell TryStepForward()
+      public Cell TryStepForward()
       {
-         LinkedListNode<ICell> nextStep = _currentStep.Next;
+         LinkedListNode<Cell> nextStep = _currentStep.Next;
          if ( nextStep == null )
          {
-            return null;
+            throw new Exception("No next step");
          }
          _currentStep = nextStep;
          return nextStep.Value;
@@ -123,9 +123,9 @@ namespace RogueSharp
       /// </summary>
       /// <returns>A Cell representing the Step that was moved to as we back up along the Path</returns>
       /// <exception cref="NoMoreStepsException">Thrown when attempting to move backward along a Path on which we are currently at the Start</exception>
-      public ICell StepBackward()
+      public Cell StepBackward()
       {
-         ICell cell = TryStepBackward();
+         Cell cell = TryStepBackward();
 
          if ( cell == null )
          {
@@ -139,12 +139,12 @@ namespace RogueSharp
       /// Move backwards along this Path and rewind the CurrentStep to the next Step in the Path
       /// </summary>
       /// <returns>A Cell representing the Step that was moved to as we back up along the Path. If there is not another Cell in the path to back up to null is returned</returns>
-      public ICell TryStepBackward()
+      public Cell TryStepBackward()
       {
-         LinkedListNode<ICell> previousStep = _currentStep.Previous;
+         LinkedListNode<Cell> previousStep = _currentStep.Previous;
          if ( previousStep == null )
          {
-            return null;
+            throw new Exception("No next step");
          }
          _currentStep = previousStep;
          return previousStep.Value;

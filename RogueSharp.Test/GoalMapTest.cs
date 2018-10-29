@@ -69,7 +69,7 @@ namespace RogueSharp.Test
          Path path = goalMap.FindPath( 3, 4 );
 
          Assert.AreEqual( 7, path.Length );
-         ICell stepForward = path.StepForward();
+         Cell stepForward = path.StepForward();
          Assert.AreEqual( new Cell( 4, 4, true, true, false ), stepForward );
       }
 
@@ -214,7 +214,7 @@ namespace RogueSharp.Test
 
          Path path = goalMap.FindPath( 23, 7 );
          var actualPath = new StringBuilder();
-         foreach ( ICell cell in path.Steps )
+         foreach ( Cell cell in path.Steps )
          {
             actualPath.Append( cell.ToString() );
          }
@@ -270,7 +270,7 @@ namespace RogueSharp.Test
 
          Path path = goalMap.FindPath( 23, 7 );
          var actualPath = new StringBuilder();
-         foreach ( ICell cell in path.Steps )
+         foreach ( Cell cell in path.Steps )
          {
             actualPath.Append( cell.ToString() );
          }
@@ -374,7 +374,7 @@ namespace RogueSharp.Test
          Path path = goalMap.TryFindPath( 3, 4 );
 
          Assert.AreEqual( 7, path.Length );
-         ICell stepForward = path.StepForward();
+         Cell stepForward = path.StepForward();
          Assert.AreEqual( new Cell( 4, 4, true, true, false ), stepForward );
       }
 
@@ -524,7 +524,7 @@ namespace RogueSharp.Test
 
          Path path = goalMap.TryFindPath( 23, 7 );
          var actualPath = new StringBuilder();
-         foreach ( ICell cell in path.Steps )
+         foreach ( Cell cell in path.Steps )
          {
             actualPath.Append( cell.ToString() );
          }
@@ -580,7 +580,7 @@ namespace RogueSharp.Test
 
          Path path = goalMap.TryFindPath( 23, 7 );
          var actualPath = new StringBuilder();
-         foreach ( ICell cell in path.Steps )
+         foreach ( Cell cell in path.Steps )
          {
             actualPath.Append( cell.ToString() );
          }

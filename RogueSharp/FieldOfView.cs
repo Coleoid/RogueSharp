@@ -61,9 +61,9 @@ namespace RogueSharp
       {
          return _inFov.Contains(_map.IndexFor(x, y));
       }
-      public bool IsInFov(ICoord xy)
+      public bool IsInFov(Coord coord)
       {
-         return _inFov.Contains(_map.IndexFor(xy));
+         return _inFov.Contains(_map.IndexFor(coord));
       }
 
       /// <summary>
@@ -76,7 +76,7 @@ namespace RogueSharp
       /// <param name="radius">The number of Cells in which the field-of-view extends from the origin Cell. Think of this as the intensity of the light source.</param>
       /// <param name="lightWalls">True if walls should be included in the field-of-view when they are within the radius of the light source. False excludes walls even when they are within range.</param>
       /// <returns>List of Cells representing what is observable in the Map based on the specified parameters</returns>
-      public ReadOnlyCollection<ICell> ComputeFov( int xOrigin, int yOrigin, int radius, bool lightWalls )
+      public ReadOnlyCollection<Cell> ComputeFov( int xOrigin, int yOrigin, int radius, bool lightWalls )
       {
          ClearFov();
          return AppendFov( xOrigin, yOrigin, radius, lightWalls );
@@ -95,25 +95,28 @@ namespace RogueSharp
       /// <param name="radius">The number of Cells in which the field-of-view extends from the origin Cell. Think of this as the intensity of the light source.</param>
       /// <param name="lightWalls">True if walls should be included in the field-of-view when they are within the radius of the light source. False excludes walls even when they are within range.</param>
       /// <returns>List of Cells representing what is observable in the Map based on the specified parameters</returns>
-      public ReadOnlyCollection<ICell> AppendFov( int xOrigin, int yOrigin, int radius, bool lightWalls )
+      public ReadOnlyCollection<Cell> AppendFov( int xOrigin, int yOrigin, int radius, bool lightWalls )
       {
-         foreach ( ICell borderCell in _map.GetBorderCellsInSquare( xOrigin, yOrigin, radius ) )
+         foreach ( Cell borderCell in _map.GetBorderCellsInSquare( xOrigin, yOrigin, radius ) )
          {
-            foreach ( ICell cell in _map.GetCellsAlongLine( xOrigin, yOrigin, borderCell.X, borderCell.Y ) )
+            foreach ( Cell cell in _map.GetCellsAlongLine( xOrigin, yOrigin, borderCell.Coord.X, borderCell.Coord.Y ) )
             {
-               if ( ( Math.Abs( cell.X - xOrigin ) + Math.Abs( cell.Y - yOrigin ) ) > radius )
+               var xDist = cell.Coord.X - xOrigin;
+               var yDist = cell.Coord.Y - yOrigin;
+               var dist = Math.Sqrt(xDist * xDist + yDist * yDist);
+               if ( dist - .5 > radius )
                {
                   break;
                }
                if ( cell.IsTransparent )
                {
-                  _inFov.Add( _map.IndexFor( cell ) );
+                  _inFov.Add( _map.IndexFor( cell.Coord ) );
                }
                else
                {
                   if ( lightWalls )
                   {
-                     _inFov.Add( _map.IndexFor( cell ) );
+                     _inFov.Add( _map.IndexFor( cell.Coord ) );
                   }
                   break;
                }
@@ -124,28 +127,28 @@ namespace RogueSharp
          {
             // Post processing step created based on the algorithm at this website:
             // https://sites.google.com/site/jicenospam/visibilitydetermination
-            foreach ( ICell cell in _map.GetCellsInSquare( xOrigin, yOrigin, radius ) )
+            foreach ( Coord coord in _map.GetCoordsInSquare( xOrigin, yOrigin, radius ) )
             {
-               if ( cell.X > xOrigin )
+               if ( coord.X > xOrigin )
                {
-                  if ( cell.Y > yOrigin )
+                  if ( coord.Y > yOrigin )
                   {
-                     PostProcessFovQuadrant( cell.X, cell.Y, Quadrant.SE );
+                     PostProcessFovQuadrant( coord.X, coord.Y, Quadrant.SE );
                   }
-                  else if ( cell.Y < yOrigin )
+                  else if ( coord.Y < yOrigin )
                   {
-                     PostProcessFovQuadrant( cell.X, cell.Y, Quadrant.NE );
+                     PostProcessFovQuadrant( coord.X, coord.Y, Quadrant.NE );
                   }
                }
-               else if ( cell.X < xOrigin )
+               else if ( coord.X < xOrigin )
                {
-                  if ( cell.Y > yOrigin )
+                  if ( coord.Y > yOrigin )
                   {
-                     PostProcessFovQuadrant( cell.X, cell.Y, Quadrant.SW );
+                     PostProcessFovQuadrant( coord.X, coord.Y, Quadrant.SW );
                   }
-                  else if ( cell.Y < yOrigin )
+                  else if ( coord.Y < yOrigin )
                   {
-                     PostProcessFovQuadrant( cell.X, cell.Y, Quadrant.NW );
+                     PostProcessFovQuadrant( coord.X, coord.Y, Quadrant.NW );
                   }
                }
             }
@@ -154,14 +157,14 @@ namespace RogueSharp
          return CellsInFov();
       }
 
-      private ReadOnlyCollection<ICell> CellsInFov()
+      private ReadOnlyCollection<Cell> CellsInFov()
       {
-         var cells = new List<ICell>();
+         var cells = new List<Cell>();
          foreach ( int index in _inFov )
          {
             cells.Add( _map.CellFor( index ) );
          }
-         return new ReadOnlyCollection<ICell>( cells );
+         return new ReadOnlyCollection<Cell>( cells );
       }
 
       private void ClearFov()

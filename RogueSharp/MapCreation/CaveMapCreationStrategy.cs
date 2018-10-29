@@ -87,27 +87,20 @@ namespace RogueSharp.MapCreation
             }
          }
 
-         ConnectCaves();
+         //ConnectCaves();
 
          return _map;
       }
 
       private void RandomlyFillCells()
       {
-         foreach ( ICell cell in _map.GetAllCells() )
+         foreach (Cell cell in _map.GetAllCells())
          {
-            if ( IsBorderCell( cell ) )
-            {
-               _map.SetCellProperties( cell.X, cell.Y, false, false );
-            }
-            else if ( _random.Next( 1, 100 ) < _fillProbability )
-            {
-               _map.SetCellProperties( cell.X, cell.Y, true, true );
-            }
-            else
-            {
-               _map.SetCellProperties( cell.X, cell.Y, false, false );
-            }
+            bool isClear =
+               (!IsBorderCoord(cell.Coord) && _random.Next(1, 100) > _fillProbability);
+
+            _map.SetIsTransparent(cell.Coord, isClear);
+            _map.SetIsWalkable(cell.Coord, isClear);
          }
       }
 
@@ -115,20 +108,15 @@ namespace RogueSharp.MapCreation
       {
          var updatedMap = _map.Clone() as T;
 
-         foreach ( ICell cell in _map.GetAllCells() )
+         foreach ( Cell cell in _map.GetAllCells() )
          {
-            if ( IsBorderCell( cell ) )
-            {
-               continue;
-            }
-            if ( ( CountWallsNear( cell, 1 ) >= 5 ) || ( CountWallsNear( cell, 2 ) <= 2 ) )
-            {
-               updatedMap.SetCellProperties( cell.X, cell.Y, false, false );
-            }
-            else
-            {
-               updatedMap.SetCellProperties( cell.X, cell.Y, true, true );
-            }
+            if (IsBorderCoord(cell.Coord)) continue;
+
+            bool isClear =
+               !(CountWallsNear(cell.Coord, 1) >= 5) || (CountWallsNear(cell.Coord, 2) <= 2);
+
+            updatedMap.SetIsTransparent(cell.Coord, isClear);
+            updatedMap.SetIsWalkable(cell.Coord, isClear);
          }
 
          _map = updatedMap;
@@ -138,78 +126,69 @@ namespace RogueSharp.MapCreation
       {
          var updatedMap = _map.Clone() as T;
 
-         foreach ( ICell cell in _map.GetAllCells() )
+         foreach ( Cell cell in _map.GetAllCells() )
          {
-            if ( IsBorderCell( cell ) )
-            {
-               continue;
-            }
-            if ( CountWallsNear( cell, 1 ) >= 5 )
-            {
-               updatedMap.SetCellProperties( cell.X, cell.Y, false, false );
-            }
-            else
-            {
-               updatedMap.SetCellProperties( cell.X, cell.Y, true, true );
-            }
+            if (IsBorderCoord(cell.Coord)) continue;
+
+            bool isClear = !(CountWallsNear(cell.Coord, 1) >= 5);
+
+            updatedMap.SetIsTransparent(cell.Coord, isClear);
+            updatedMap.SetIsWalkable(cell.Coord, isClear);
          }
 
          _map = updatedMap;
       }
 
-      private bool IsBorderCell( ICell cell )
+      private bool IsBorderCoord( Coord coord )
       {
-         return cell.X == 0 || cell.X == _map.Width - 1
-                || cell.Y == 0 || cell.Y == _map.Height - 1;
+         return coord.X == 0 || coord.X == _map.Width - 1
+                || coord.Y == 0 || coord.Y == _map.Height - 1;
       }
 
-      private int CountWallsNear( ICell cell, int distance )
+      private int CountWallsNear(Coord coord, int distance)
       {
          int count = 0;
-         foreach ( ICell nearbyCell in _map.GetCellsInSquare( cell.X, cell.Y, distance ) )
+         foreach (Cell nearbyCell in _map.GetCellsInSquare(coord.X, coord.Y, distance))
          {
-            if ( nearbyCell.X == cell.X && nearbyCell.Y == cell.Y )
-            {
-               continue;
-            }
-            if ( !nearbyCell.IsWalkable )
-            {
-               count++;
-            }
+            if (coord.Equals(nearbyCell.Coord)) continue;
+            if (!nearbyCell.IsWalkable) count++;
          }
+
          return count;
       }
 
-      private void ConnectCaves()
-      {
-         var floodFillAnalyzer = new FloodFillAnalyzer(_map);
-         List<MapSection> mapSections = floodFillAnalyzer.GetMapSections();
-         var unionFind = new UnionFind( mapSections.Count );
-         while ( unionFind.Count > 1 )
-         {
-            for ( int i = 0; i < mapSections.Count; i++ )
-            {
-               int closestMapSectionIndex = FindNearestMapSection( mapSections, i, unionFind );
-               MapSection closestMapSection = mapSections[closestMapSectionIndex];
-               IEnumerable<ICell> tunnelCells = _map.GetCellsAlongLine( mapSections[i].Bounds.Center.X, mapSections[i].Bounds.Center.Y,
-                  closestMapSection.Bounds.Center.X, closestMapSection.Bounds.Center.Y );
-               ICell previousCell = null;
-               foreach ( ICell cell in tunnelCells )
-               {
-                  _map.SetCellProperties( cell.X, cell.Y, true, true );
-                  if ( previousCell != null )
-                  {
-                     if ( cell.X != previousCell.X || cell.Y != previousCell.Y )
-                     {
-                        _map.SetCellProperties( cell.X + 1, cell.Y, true, true );
-                     }
-                  }
-                  previousCell = cell;
-               }
-               unionFind.Union( i, closestMapSectionIndex );
-            }
-         }
-      }
+      //private void ConnectCaves()
+      //{
+      //   var floodFillAnalyzer = new FloodFillAnalyzer(_map);
+      //   List<MapSection> mapSections = floodFillAnalyzer.GetMapSections();
+      //   var unionFind = new UnionFind( mapSections.Count );
+      //   while ( unionFind.Count > 1 )
+      //   {
+      //      for ( int i = 0; i < mapSections.Count; i++ )
+      //      {
+      //         int closestMapSectionIndex = FindNearestMapSection( mapSections, i, unionFind );
+      //         MapSection closestMapSection = mapSections[closestMapSectionIndex];
+      //         IEnumerable<Cell> tunnelCells = _map.GetCellsAlongLine( mapSections[i].Bounds.Center.X, mapSections[i].Bounds.Center.Y,
+      //            closestMapSection.Bounds.Center.X, closestMapSection.Bounds.Center.Y );
+
+      //         bool firstCell = true;
+      //         Cell previousCell = null;
+      //         foreach ( Cell cell in tunnelCells )
+      //         {
+      //            _map.SetCellProperties( cell.X, cell.Y, true, true );
+      //            if ( previousCell != null )
+      //            {
+      //               if ( cell.X != previousCell.X || cell.Y != previousCell.Y )
+      //               {
+      //                  _map.SetCellProperties( cell.X + 1, cell.Y, true, true );
+      //               }
+      //            }
+      //            previousCell = cell;
+      //         }
+      //         unionFind.Union( i, closestMapSectionIndex );
+      //      }
+      //   }
+      //}
 
       private static int FindNearestMapSection( IList<MapSection> mapSections, int mapSectionIndex, UnionFind unionFind )
       {
@@ -266,8 +245,8 @@ namespace RogueSharp.MapCreation
 
          public List<MapSection> GetMapSections()
          {
-            IEnumerable<ICell> cells = _map.GetAllCells();
-            foreach ( ICell cell in cells )
+            IEnumerable<Cell> cells = _map.GetAllCells();
+            foreach ( Cell cell in cells )
             {
                MapSection section = Visit(cell);
                if ( section.Cells.Count > 0 )
@@ -279,47 +258,47 @@ namespace RogueSharp.MapCreation
             return _mapSections;
          }
 
-         private MapSection Visit(ICell cell)
+         private MapSection Visit(Cell cell)
          {
-            Stack<ICell> stack = new Stack<ICell>(new List<ICell>());
+            Stack<Cell> stack = new Stack<Cell>(new List<Cell>());
             MapSection mapsection = new MapSection();
             stack.Push(cell);
             while ( stack.Count != 0 )
             {
                cell = stack.Pop();
-               if ( _visited[cell.Y][cell.X] || !cell.IsWalkable )
+               if ( _visited[cell.Coord.Y][cell.Coord.X] || !cell.IsWalkable )
                {
                   continue;
                }
                mapsection.AddCell( cell );
-               _visited[cell.Y][cell.X] = true;
-               foreach ( ICell neighbor in GetNeighbors(cell) )
-               {
-                  if ( cell.IsWalkable == neighbor.IsWalkable && !_visited[neighbor.Y][neighbor.X] )
-                  {
-                     stack.Push( neighbor );
-                  }
-               }
+               _visited[cell.Coord.Y][cell.Coord.X] = true;
+               //foreach ( Cell neighbor in GetNeighbors(cell.Coord) )
+               //{
+               //   if ( cell.IsWalkable == neighbor.IsWalkable && !_visited[neighbor.Y][neighbor.X] )
+               //   {
+               //      stack.Push( neighbor );
+               //   }
+               //}
             }
             return mapsection;
          }
 
-         private ICell GetCell( int x, int y )
+         private Cell GetCell( int x, int y )
          {
             if (x < 0 || y < 0)
             {
-               return null;
+               throw new Exception("garga;foiugg");
             }
             if (x >= _map.Width || y >= _map.Height)
             {
-               return null;
+               throw new Exception("garga;foiugg on the far edge");
             }
             return _map.GetCell( x, y );
          }
 
-         private IEnumerable<ICell> GetNeighbors( ICell cell )
+         private IEnumerable<Coord> GetNeighbors( Coord cell )
          {
-            List<ICell> neighbors = new List<ICell>(8);
+            List<Coord> neighbors = new List<Coord>(8);
             foreach (int[] offset in _offsets)
             {
                var neighbor = GetCell(cell.X + offset[0], cell.Y + offset[1]);
@@ -327,7 +306,7 @@ namespace RogueSharp.MapCreation
                {
                   continue;
                }
-               neighbors.Add( neighbor );
+               neighbors.Add( neighbor.Coord );
             }
 
              return neighbors;
@@ -349,38 +328,38 @@ namespace RogueSharp.MapCreation
             }
          }
 
-         public HashSet<ICell> Cells { get; private set; }
+         public HashSet<Cell> Cells { get; private set; }
 
          public MapSection()
          {
-            Cells = new HashSet<ICell>();
+            Cells = new HashSet<Cell>();
             _top = int.MaxValue;
             _left = int.MaxValue;
          }
 
-         public void AddCell( ICell cell )
+         public void AddCell( Cell cell )
          {
             Cells.Add( cell );
-            UpdateBounds( cell );
+            UpdateBounds( cell.Coord );
          }
 
-         private void UpdateBounds( ICell cell )
+         private void UpdateBounds( Coord coord )
          {
-            if ( cell.X > _right )
+            if ( coord.X > _right )
             {
-              _right = cell.X;
+              _right = coord.X;
             }
-            if ( cell.X < _left )
+            if ( coord.X < _left )
             {
-              _left = cell.X;
+              _left = coord.X;
             }
-            if ( cell.Y > _bottom )
+            if ( coord.Y > _bottom )
             {
-              _bottom = cell.Y;
+              _bottom = coord.Y;
             }
-            if ( cell.Y < _top )
+            if ( coord.Y < _top )
             {
-              _top = cell.Y;
+              _top = coord.Y;
             }
          }
 

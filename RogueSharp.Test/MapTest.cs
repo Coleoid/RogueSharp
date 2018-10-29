@@ -32,10 +32,10 @@ namespace RogueSharp.Test
 
          map.Clear( true, false );
 
-         foreach ( ICell cell in map.GetAllCells() )
+         foreach ( Cell cell in map.GetAllCells() )
          {
-            Assert.IsTrue( map.IsTransparent( cell.X, cell.Y ) );
-            Assert.IsFalse( map.IsWalkable( cell.X, cell.Y ) );
+            Assert.IsTrue( map.IsTransparent( cell.Coord.X, cell.Coord.Y ) );
+            Assert.IsFalse( map.IsWalkable( cell.Coord.X, cell.Coord.Y ) );
          }
       }
 
@@ -233,7 +233,7 @@ namespace RogueSharp.Test
          string expectedPath = "#.s#";
 
          StringBuilder actualPath = new StringBuilder();
-         foreach ( ICell cell in map.GetCellsAlongLine( 3, 0, 0, 3 ) )
+         foreach ( Cell cell in map.GetCellsAlongLine( 3, 0, 0, 3 ) )
          {
             actualPath.Append( cell.ToString() );
          }
@@ -253,7 +253,7 @@ namespace RogueSharp.Test
          string expectedPath = "#o.#";
 
          StringBuilder actualPath = new StringBuilder();
-         foreach ( ICell cell in map.GetCellsAlongLine( 3, 3, 0, 0 ) )
+         foreach ( Cell cell in map.GetCellsAlongLine( 3, 3, 0, 0 ) )
          {
             actualPath.Append( cell.ToString() );
          }
@@ -273,7 +273,7 @@ namespace RogueSharp.Test
          string expectedPath = "#so#";
 
          StringBuilder actualPath = new StringBuilder();
-         foreach ( ICell cell in map.GetCellsAlongLine( 0, 2, 3, 2 ) )
+         foreach ( Cell cell in map.GetCellsAlongLine( 0, 2, 3, 2 ) )
          {
             actualPath.Append( cell.ToString() );
          }
@@ -293,7 +293,7 @@ namespace RogueSharp.Test
          string expectedPath = "#os#";
 
          StringBuilder actualPath = new StringBuilder();
-         foreach ( ICell cell in map.GetCellsAlongLine( 3, 2, 0, 2 ) )
+         foreach ( Cell cell in map.GetCellsAlongLine( 3, 2, 0, 2 ) )
          {
             actualPath.Append( cell.ToString() );
          }
@@ -313,7 +313,7 @@ namespace RogueSharp.Test
          string expectedPath = "#.o#";
 
          StringBuilder actualPath = new StringBuilder();
-         foreach ( ICell cell in map.GetCellsAlongLine( 0, 0, 10, 10 ) )
+         foreach ( Cell cell in map.GetCellsAlongLine( 0, 0, 10, 10 ) )
          {
             actualPath.Append( cell.ToString() );
          }
@@ -338,11 +338,11 @@ namespace RogueSharp.Test
          IMap map = Map.Create( mapCreationStrategy );
          string expectedCells = "##########..#####.....##..#..##.#.#.#";
 
-         IEnumerable<ICell> cells = map.GetCellsInCircle( 3, 3, 3 )
-            .OrderBy( c => c.X )
-            .ThenBy( c => c.Y );
+         IEnumerable<Cell> cells = map.GetCellsInCircle( 3, 3, 3 )
+            .OrderBy( c => c.Coord.X )
+            .ThenBy( c => c.Coord.Y );
          var actualCells = new StringBuilder();
-         foreach ( ICell cell in cells )
+         foreach ( Cell cell in cells )
          {
             actualCells.Append( cell.ToString() );
          }
@@ -367,11 +367,12 @@ namespace RogueSharp.Test
          IMap map = Map.Create( mapCreationStrategy );
          string expectedCells = "########.#.#.#.#";
 
-         IEnumerable<ICell> cells = map.GetBorderCellsInCircle( 3, 3, 3 )
-            .OrderBy( c => c.X )
-            .ThenBy( c => c.Y );
+         IEnumerable<Cell> cells = map.GetCellsInCircle(3, 3, 3)
+            .OrderBy(c => c.Coord.X)
+            .ThenBy(c => c.Coord.Y);
+
          var actualCells = new StringBuilder();
-         foreach ( ICell cell in cells )
+         foreach ( Cell cell in cells )
          {
             actualCells.Append( cell.ToString() );
          }
@@ -396,11 +397,12 @@ namespace RogueSharp.Test
          IMap map = Map.Create( mapCreationStrategy );
          string expectedCells = "##";
 
-         IEnumerable<ICell> cells = map.GetBorderCellsInCircle( 0, 0, 1 )
-            .OrderBy( c => c.X )
-            .ThenBy( c => c.Y );
+         IEnumerable<Cell> cells = map.GetBorderCellsInCircle(3, 3, 3)
+            .OrderBy(c => c.Coord.X)
+            .ThenBy(c => c.Coord.Y);
+
          var actualCells = new StringBuilder();
-         foreach ( ICell cell in cells )
+         foreach ( Cell cell in cells )
          {
             actualCells.Append( cell.ToString() );
          }
@@ -425,11 +427,12 @@ namespace RogueSharp.Test
          IMap map = Map.Create( mapCreationStrategy );
          string expectedCells = "#..##......#.";
 
-         IEnumerable<ICell> cells = map.GetCellsInDiamond( 3, 3, 2 )
-            .OrderBy( c => c.X )
-            .ThenBy( c => c.Y );
+         IEnumerable<Cell> cells = map.GetCellsInDiamond(3, 3, 3)
+            .OrderBy(c => c.Coord.X)
+            .ThenBy(c => c.Coord.Y);
+
          var actualCells = new StringBuilder();
-         foreach ( ICell cell in cells )
+         foreach ( Cell cell in cells )
          {
             actualCells.Append( cell.ToString() );
          }
@@ -454,11 +457,12 @@ namespace RogueSharp.Test
          IMap map = Map.Create( mapCreationStrategy );
          string expectedCells = "#.##..#.";
 
-         IEnumerable<ICell> cells = map.GetBorderCellsInDiamond( 3, 3, 2 )
-            .OrderBy( c => c.X )
-            .ThenBy( c => c.Y );
+         IEnumerable<Cell> cells = map.GetBorderCellsInDiamond( 3, 3, 2 )
+            .OrderBy(c => c.Coord.X)
+            .ThenBy(c => c.Coord.Y);
+
          var actualCells = new StringBuilder();
-         foreach ( ICell cell in cells )
+         foreach ( Cell cell in cells )
          {
             actualCells.Append( cell.ToString() );
          }
@@ -483,11 +487,12 @@ namespace RogueSharp.Test
          IMap map = Map.Create( mapCreationStrategy );
          string expectedCells = "##";
 
-         IEnumerable<ICell> cells = map.GetBorderCellsInDiamond( 0, 0, 1 )
-            .OrderBy( c => c.X )
-            .ThenBy( c => c.Y );
+         IEnumerable<Cell> cells = map.GetBorderCellsInDiamond( 0, 0, 1 )
+            .OrderBy(c => c.Coord.X)
+            .ThenBy(c => c.Coord.Y);
+
          var actualCells = new StringBuilder();
-         foreach ( ICell cell in cells )
+         foreach ( Cell cell in cells )
          {
             actualCells.Append( cell.ToString() );
          }
@@ -512,11 +517,12 @@ namespace RogueSharp.Test
          IMap map = Map.Create( mapCreationStrategy );
          string expectedCells = "######..###....#..#.##.#.";
 
-         IEnumerable<ICell> cells = map.GetCellsInSquare( 3, 3, 2 )
-            .OrderBy( c => c.X )
-            .ThenBy( c => c.Y );
+         IEnumerable<Cell> cells = map.GetCellsInSquare( 3, 3, 2 )
+            .OrderBy(c => c.Coord.X)
+            .ThenBy(c => c.Coord.Y);
+
          var actualCells = new StringBuilder();
-         foreach ( ICell cell in cells )
+         foreach ( Cell cell in cells )
          {
             actualCells.Append( cell.ToString() );
          }
@@ -541,11 +547,12 @@ namespace RogueSharp.Test
          IMap map = Map.Create( mapCreationStrategy );
          string expectedCells = "########.#.##.#.";
 
-         IEnumerable<ICell> cells = map.GetBorderCellsInSquare( 3, 3, 2 )
-            .OrderBy( c => c.X )
-            .ThenBy( c => c.Y );
+         IEnumerable<Cell> cells = map.GetBorderCellsInSquare( 3, 3, 2 )
+            .OrderBy(c => c.Coord.X)
+            .ThenBy(c => c.Coord.Y);
+
          var actualCells = new StringBuilder();
-         foreach ( ICell cell in cells )
+         foreach ( Cell cell in cells )
          {
             actualCells.Append( cell.ToString() );
          }
@@ -570,11 +577,12 @@ namespace RogueSharp.Test
          IMap map = Map.Create( mapCreationStrategy );
          string expectedCells = "###";
 
-         IEnumerable<ICell> cells = map.GetBorderCellsInSquare( 0, 0, 1 )
-            .OrderBy( c => c.X )
-            .ThenBy( c => c.Y );
+         IEnumerable<Cell> cells = map.GetBorderCellsInSquare( 0, 0, 1 )
+            .OrderBy(c => c.Coord.X)
+            .ThenBy(c => c.Coord.Y);
+
          var actualCells = new StringBuilder();
-         foreach ( ICell cell in cells )
+         foreach ( Cell cell in cells )
          {
             actualCells.Append( cell.ToString() );
          }

@@ -76,74 +76,21 @@ namespace RogueSharp
          _fieldOfView = new FieldOfView( this );
       }
 
-      /// <summary>
-      /// Get the transparency of the Cell i.e. if line of sight would be blocked by this Cell
-      /// </summary>
-      /// <example>      
-      /// A Cell representing an empty stone floor would be transparent 
-      /// A Cell representing a glass wall could be transparent (even though it may not be walkable)
-      /// A Cell representing a solid stone wall would not be transparent
-      /// </example>
-      /// <param name="x">X location of the Cell to check starting with 0 as the farthest left</param>
-      /// <param name="y">Y location of the Cell to check, starting with 0 as the top</param>
-      /// <returns>True if line-of-sight is not blocked by this Cell, false otherwise</returns>
-      public bool IsTransparent( int x, int y )
-      {
-         return _isTransparent[x, y];
-      }
-      public bool IsTransparent(ICoord coord)
-      {
-         return _isTransparent[coord.X, coord.Y];
-      }
+      public bool IsTransparent( int x, int y ) => _isTransparent[x, y];
 
-      /// <summary>
-      /// Get the walkability of the Cell i.e. if a character could normally move across the Cell without difficulty
-      /// </summary>
-      /// <example>      
-      /// A Cell representing an empty stone floor would be walkable
-      /// A Cell representing a glass wall may not be walkable (even though it could be transparent)
-      /// A Cell representing a solid stone wall would not be walkable
-      /// </example>
-      /// <param name="x">X location of the Cell to check starting with 0 as the farthest left</param>
-      /// <param name="y">Y location of the Cell to check, starting with 0 as the top</param>
-      /// <returns>True if a character could move across this Cell, false otherwise</returns>
-      public bool IsWalkable(int x, int y)
-      {
-         return _isWalkable[x, y];
-      }
-      public bool IsWalkable(ICoord xy)
-      {
-         return _isWalkable[xy.X, xy.Y];
-      }
+      public bool IsTransparent(Coord coord) => _isTransparent[coord.X, coord.Y];
 
+      public bool IsWalkable(int x, int y) => _isWalkable[x, y];
 
-      /// <summary>
-      /// Check if the Cell is in the currently computed field-of-view
-      /// For newly initialized maps a field-of-view will not exist so all Cells will return false
-      /// Field-of-view must first be calculated by calling ComputeFov and/or AppendFov
-      /// </summary>
-      /// <remarks>
-      /// Field-of-view (FOV) is basically a calculation of what is observable in the Map from a given Cell with a given light radius
-      /// </remarks>
-      /// <example>
-      /// Field-of-view can be used to simulate a character holding a light source and exploring a Map representing a dark cavern
-      /// Any Cells within the FOV would be what the character could see from their current location and lighting conditions
-      /// </example>
-      /// <param name="x">X location of the Cell to check starting with 0 as the farthest left</param>
-      /// <param name="y">Y location of the Cell to check, starting with 0 as the top</param>
-      /// <returns>True if the Cell is in the currently computed field-of-view, false otherwise</returns>
-      public bool IsInFov(ICoord xy)
-      {
-         return _fieldOfView.IsInFov(xy);
-      }
+      public bool IsWalkable(Coord coord) => _isWalkable[coord.X, coord.Y];
 
-      public bool IsWithinMap(ICoord coord)
+      public bool IsInFov(Coord coord) => _fieldOfView.IsInFov(coord);
+
+      public bool IsWithinMap(Coord coord)
       {
          return
-            coord.X > 0 &&
-            coord.Y > 0 &&
-            coord.X < Width &&
-            coord.Y < Height;
+            0 <= coord.X && coord.X < Width &&
+            0 <= coord.Y && coord.Y < Height;
       }
 
       /// <summary>
@@ -164,64 +111,64 @@ namespace RogueSharp
       {
          return _isExplored[x, y];
       }
-      public bool IsExplored(ICoord xy)
+      public bool IsExplored(Coord coord)
       {
-         return _isExplored[xy.X, xy.Y];
+         return _isExplored[coord.X, coord.Y];
       }
 
-      public void SetIsExplored(ICoord coord, bool isExplored)
+      public void SetIsExplored(Coord coord, bool isExplored)
       {
          _isExplored[coord.X, coord.Y] = isExplored;
       }
 
-      public void SetIsWalkable(ICoord coord, bool isWalkable)
+      public void SetIsWalkable(Coord coord, bool isWalkable)
       {
          _isWalkable[coord.X, coord.Y] = isWalkable;
       }
 
-      public void SetIsTransparent(ICoord coord, bool isTransparent)
+      public void SetIsTransparent(Coord coord, bool isTransparent)
       {
          _isTransparent[coord.X, coord.Y] = isTransparent;
       }
 
-      public ICell GetCellAt(ICoord coord)
+      public Cell GetCellAt(Coord coord)
       {
-         if (coord is ICell cell) return cell;
+         //if (coord is ICell cell) return cell;
          return GetCell(coord.X, coord.Y);
       }
 
-      /// <summary>
-      /// Set the properties of a Cell to the specified values
-      /// </summary>
-      /// <remarks>
-      /// IsInFov cannot be set through this method as it is always calculated by calling ComputeFov and/or AppendFov
-      /// </remarks>
-      /// <param name="x">X location of the Cell to set properties on, starting with 0 as the farthest left</param>
-      /// <param name="y">Y location of the Cell to set properties on, starting with 0 as the top</param>
-      /// <param name="isTransparent">True if line-of-sight is not blocked by this Cell. False otherwise</param>
-      /// <param name="isWalkable">True if a character could walk across the Cell normally. False otherwise</param>
-      /// <param name="isExplored">True if the Cell has ever been in the field-of-view of the player. False otherwise</param>
-      public void SetCellProperties(int x, int y, bool isTransparent, bool isWalkable, bool isExplored)
-      {
-         _isTransparent[x, y] = isTransparent;
-         _isWalkable[x, y] = isWalkable;
-         _isExplored[x, y] = isExplored;
-      }
+      ///// <summary>
+      ///// Set the properties of a Cell to the specified values
+      ///// </summary>
+      ///// <remarks>
+      ///// IsInFov cannot be set through this method as it is always calculated by calling ComputeFov and/or AppendFov
+      ///// </remarks>
+      ///// <param name="x">X location of the Cell to set properties on, starting with 0 as the farthest left</param>
+      ///// <param name="y">Y location of the Cell to set properties on, starting with 0 as the top</param>
+      ///// <param name="isTransparent">True if line-of-sight is not blocked by this Cell. False otherwise</param>
+      ///// <param name="isWalkable">True if a character could walk across the Cell normally. False otherwise</param>
+      ///// <param name="isExplored">True if the Cell has ever been in the field-of-view of the player. False otherwise</param>
+      //public void SetCellProperties(int x, int y, bool isTransparent, bool isWalkable, bool isExplored)
+      //{
+      //   _isTransparent[x, y] = isTransparent;
+      //   _isWalkable[x, y] = isWalkable;
+      //   _isExplored[x, y] = isExplored;
+      //}
 
-      /// <summary>
-      /// Set the properties of an unexplored Cell to the specified values
-      /// </summary>
-      /// <remarks>
-      /// IsInFov cannot be set through this method as it is always calculated by calling ComputeFov and/or AppendFov
-      /// </remarks>
-      /// <param name="x">X location of the Cell to set properties on, starting with 0 as the farthest left</param>
-      /// <param name="y">Y location of the Cell to set properties on, starting with 0 as the top</param>
-      /// <param name="isTransparent">True if line-of-sight is not blocked by this Cell. False otherwise</param>
-      /// <param name="isWalkable">True if a character could walk across the Cell normally. False otherwise</param>
-      public void SetCellProperties( int x, int y, bool isTransparent, bool isWalkable )
-      {
-         SetCellProperties( x, y, isTransparent, isWalkable, false );
-      }
+      ///// <summary>
+      ///// Set the properties of an unexplored Cell to the specified values
+      ///// </summary>
+      ///// <remarks>
+      ///// IsInFov cannot be set through this method as it is always calculated by calling ComputeFov and/or AppendFov
+      ///// </remarks>
+      ///// <param name="x">X location of the Cell to set properties on, starting with 0 as the farthest left</param>
+      ///// <param name="y">Y location of the Cell to set properties on, starting with 0 as the top</param>
+      ///// <param name="isTransparent">True if line-of-sight is not blocked by this Cell. False otherwise</param>
+      ///// <param name="isWalkable">True if a character could walk across the Cell normally. False otherwise</param>
+      //public void SetCellProperties( int x, int y, bool isTransparent, bool isWalkable )
+      //{
+      //   SetCellProperties( x, y, isTransparent, isWalkable, false );
+      //}
 
       /// <summary>
       /// Sets the properties of all Cells in the Map to be transparent and walkable
@@ -238,9 +185,10 @@ namespace RogueSharp
       /// <param name="isWalkable">Optional parameter defaults to true if not provided. True if a character could walk across the Cell normally. False otherwise</param>
       public void Clear( bool isTransparent, bool isWalkable )
       {
-         foreach ( ICell cell in GetAllCells() )
+         foreach (Cell cell in GetAllCells())
          {
-            SetCellProperties( cell.X, cell.Y, isTransparent, isWalkable );
+            SetIsTransparent(cell.Coord, isTransparent);
+            SetIsWalkable(cell.Coord, isWalkable);
          }
       }
 
@@ -250,13 +198,22 @@ namespace RogueSharp
       /// <returns>IMap deep copy of the original Map</returns>
       public IMap Clone()
       {
-         var map = new Map( Width, Height );
-         foreach ( ICell cell in GetAllCells() )
+         var map = new Map(Width, Height);
+         foreach (Cell cell in GetAllCells())
          {
-            map.SetCellProperties( cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, cell.IsExplored );
+            map.CopyCellToMapLocation(cell);
          }
          return map;
       }
+
+      public void CopyCellToMapLocation(Cell cell) => CopyCellToMapLocation(cell, cell.Coord);
+      public void CopyCellToMapLocation(Cell cell, Coord coord)
+      {
+         SetIsTransparent(coord, cell.IsTransparent);
+         SetIsWalkable(coord, cell.IsWalkable);
+         SetIsExplored(coord, cell.IsExplored);
+      }
+
 
       /// <summary>
       /// Copies the Cell properties of a smaller source Map into this destination Map at location (0,0)
@@ -290,9 +247,9 @@ namespace RogueSharp
          {
             throw new ArgumentException( "Source map 'height' + 'top' cannot be larger than the destination map height" );
          }
-         foreach ( ICell cell in sourceMap.GetAllCells() )
+         foreach ( Cell cell in sourceMap.GetAllCells() )
          {
-            SetCellProperties( cell.X + left, cell.Y + top, cell.IsTransparent, cell.IsWalkable, cell.IsExplored );
+            CopyCellToMapLocation(cell, new Coord(cell.Coord.X + left, cell.Coord.Y + top));
          }
       }
 
@@ -306,7 +263,7 @@ namespace RogueSharp
       /// <param name="radius">The number of Cells in which the field-of-view extends from the origin Cell. Think of this as the intensity of the light source.</param>
       /// <param name="lightWalls">True if walls should be included in the field-of-view when they are within the radius of the light source. False excludes walls even when they are within range.</param>
       /// <returns>List of Cells representing what is observable in the Map based on the specified parameters</returns>
-      public ReadOnlyCollection<ICell> ComputeFov( int xOrigin, int yOrigin, int radius, bool lightWalls )
+      public ReadOnlyCollection<Cell> ComputeFov( int xOrigin, int yOrigin, int radius, bool lightWalls )
       {
          return _fieldOfView.ComputeFov( xOrigin, yOrigin, radius, lightWalls );
       }
@@ -324,7 +281,7 @@ namespace RogueSharp
       /// <param name="radius">The number of Cells in which the field-of-view extends from the origin Cell. Think of this as the intensity of the light source.</param>
       /// <param name="lightWalls">True if walls should be included in the field-of-view when they are within the radius of the light source. False excludes walls even when they are within range.</param>
       /// <returns>List of Cells representing what is observable in the Map based on the specified parameters</returns>
-      public ReadOnlyCollection<ICell> AppendFov( int xOrigin, int yOrigin, int radius, bool lightWalls )
+      public ReadOnlyCollection<Cell> AppendFov( int xOrigin, int yOrigin, int radius, bool lightWalls )
       {
          return _fieldOfView.AppendFov( xOrigin, yOrigin, radius, lightWalls );
       }
@@ -333,7 +290,7 @@ namespace RogueSharp
       /// Get an IEnumerable of all Cells in the Map
       /// </summary>
       /// <returns>IEnumerable of all Cells in the Map</returns>
-      public IEnumerable<ICell> GetAllCells()
+      public IEnumerable<Cell> GetAllCells()
       {
          for ( int y = 0; y < Height; y++ )
          {
@@ -354,7 +311,7 @@ namespace RogueSharp
       /// <param name="xDestination">X location of the Destination Cell at the end of the line with 0 as the farthest left</param>
       /// <param name="yDestination">Y location of the Destination Cell at the end of the line with 0 as the top</param>
       /// <returns>IEnumerable of Cells in a line from the Origin Cell to the Destination Cell which includes the Origin and Destination Cells</returns>
-      public IEnumerable<ICell> GetCellsAlongLine( int xOrigin, int yOrigin, int xDestination, int yDestination )
+      public IEnumerable<Cell> GetCellsAlongLine( int xOrigin, int yOrigin, int xDestination, int yDestination )
       {
          xOrigin = ClampX( xOrigin );
          yOrigin = ClampY( yOrigin );
@@ -407,7 +364,7 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="radius">The number of Cells to get in a radius from the center Cell</param>
       /// <returns>IEnumerable of Cells in a circle around the center Cell</returns>
-      public IEnumerable<ICell> GetCellsInCircle( int xCenter, int yCenter, int radius )
+      public IEnumerable<Cell> GetCellsInCircle( int xCenter, int yCenter, int radius )
       {
          var discovered = new HashSet<int>();
 
@@ -417,28 +374,28 @@ namespace RogueSharp
 
          do
          {
-            foreach ( ICell cell in GetCellsAlongLine( xCenter + x, yCenter + y, xCenter - x, yCenter + y ) )
+            foreach ( Cell cell in GetCellsAlongLine( xCenter + x, yCenter + y, xCenter - x, yCenter + y ) )
             {
                if ( AddToHashSet( discovered, cell ) )
                {
                   yield return cell;
                }
             }
-            foreach ( ICell cell in GetCellsAlongLine( xCenter - x, yCenter - y, xCenter + x, yCenter - y ) )
+            foreach ( Cell cell in GetCellsAlongLine( xCenter - x, yCenter - y, xCenter + x, yCenter - y ) )
             {
                if ( AddToHashSet( discovered, cell ) )
                {
                   yield return cell;
                }
             }
-            foreach ( ICell cell in GetCellsAlongLine( xCenter + y, yCenter + x, xCenter - y, yCenter + x ) )
+            foreach ( Cell cell in GetCellsAlongLine( xCenter + y, yCenter + x, xCenter - y, yCenter + x ) )
             {
                if ( AddToHashSet( discovered, cell ) )
                {
                   yield return cell;
                }
             }
-            foreach ( ICell cell in GetCellsAlongLine( xCenter + y, yCenter - x, xCenter - y, yCenter - x ) )
+            foreach ( Cell cell in GetCellsAlongLine( xCenter + y, yCenter - x, xCenter - y, yCenter - x ) )
             {
                if ( AddToHashSet( discovered, cell ) )
                {
@@ -466,7 +423,7 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="distance">The number of Cells to get in a distance from the center Cell</param>
       /// <returns>IEnumerable of Cells in a diamond (Rhombus) shape around the center Cell</returns>
-      public IEnumerable<ICell> GetCellsInDiamond( int xCenter, int yCenter, int distance )
+      public IEnumerable<Cell> GetCellsInDiamond( int xCenter, int yCenter, int distance )
       {
          var discovered = new HashSet<int>();
 
@@ -479,7 +436,7 @@ namespace RogueSharp
          {
             for ( int j = distance; j >= 0 + i; j-- )
             {
-               ICell cell;
+               Cell cell;
                if ( AddToHashSet( discovered, Math.Max( xMin, xCenter - i ), Math.Min( yMax, yCenter + distance - j ), out cell ) )
                {
                   yield return cell;
@@ -500,6 +457,23 @@ namespace RogueSharp
          }
       }
 
+      public IEnumerable<Coord> GetCoordsInSquare(int xCenter, int yCenter, int distance)
+      {
+         int xMin = Math.Max(0, xCenter - distance);
+         int xMax = Math.Min(Width - 1, xCenter + distance);
+         int yMin = Math.Max(0, yCenter - distance);
+         int yMax = Math.Min(Height - 1, yCenter + distance);
+
+         for (int y = yMin; y <= yMax; y++)
+         {
+            for (int x = xMin; x <= xMax; x++)
+            {
+               yield return new Coord(x, y);
+            }
+         }
+      }
+
+
       /// <summary>
       /// Get an IEnumerable of Cells in a square area around the center Cell up to the specified distance
       /// </summary>
@@ -507,7 +481,7 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="distance">The number of Cells to get in each direction from the center Cell</param>
       /// <returns>IEnumerable of Cells in a square area around the center Cell</returns>
-      public IEnumerable<ICell> GetCellsInSquare( int xCenter, int yCenter, int distance )
+      public IEnumerable<Cell> GetCellsInSquare( int xCenter, int yCenter, int distance )
       {
          int xMin = Math.Max( 0, xCenter - distance );
          int xMax = Math.Min( Width - 1, xCenter + distance );
@@ -531,7 +505,7 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="radius">The number of Cells to get in a radius from the center Cell</param>
       /// <returns>IEnumerable of outermost border Cells in a circle around the center Cell</returns>
-      public IEnumerable<ICell> GetBorderCellsInCircle( int xCenter, int yCenter, int radius )
+      public IEnumerable<Cell> GetBorderCellsInCircle( int xCenter, int yCenter, int radius )
       {
          var discovered = new HashSet<int>();
 
@@ -539,11 +513,11 @@ namespace RogueSharp
          int x = 0;
          int y = radius;
 
-         ICell centerCell = GetCell( xCenter, yCenter );
+         Cell centerCell = GetCell( xCenter, yCenter );
 
          do
          {
-            ICell cell;
+            Cell cell;
             if ( AddToHashSet( discovered, ClampX( xCenter + x ), ClampY( yCenter + y ), centerCell, out cell ) )
             {
                yield return cell;
@@ -597,7 +571,7 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="distance">The number of Cells to get in a distance from the center Cell</param>
       /// <returns>IEnumerable of outermost border Cells in a diamond (Rhombus) shape around the center Cell</returns>
-      public IEnumerable<ICell> GetBorderCellsInDiamond( int xCenter, int yCenter, int distance )
+      public IEnumerable<Cell> GetBorderCellsInDiamond( int xCenter, int yCenter, int distance )
       {
          var discovered = new HashSet<int>();
 
@@ -606,8 +580,8 @@ namespace RogueSharp
          int yMin = Math.Max( 0, yCenter - distance );
          int yMax = Math.Min( Height - 1, yCenter + distance );
 
-         ICell centerCell = GetCell( xCenter, yCenter ); 
-         ICell cell;
+         Cell centerCell = GetCell( xCenter, yCenter ); 
+         Cell cell;
          if ( AddToHashSet( discovered, xCenter, yMin, centerCell, out cell ) )
          {
             yield return cell;
@@ -644,13 +618,13 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="distance">The number of Cells to get in each direction from the center Cell</param>
       /// <returns>IEnumerable of outermost border Cells in a square area around the center Cell</returns>
-      public IEnumerable<ICell> GetBorderCellsInSquare( int xCenter, int yCenter, int distance )
+      public IEnumerable<Cell> GetBorderCellsInSquare( int xCenter, int yCenter, int distance )
       {
          int xMin = Math.Max( 0, xCenter - distance );
          int xMax = Math.Min( Width - 1, xCenter + distance );
          int yMin = Math.Max( 0, yCenter - distance );
          int yMax = Math.Min( Height - 1, yCenter + distance );
-         List<ICell> borderCells = new List<ICell>();
+         List<Cell> borderCells = new List<Cell>();
 
          for ( int x = xMin; x <= xMax; x++ )
          {
@@ -663,7 +637,7 @@ namespace RogueSharp
             borderCells.Add( GetCell( xMax, y ) );
          }
 
-         ICell centerCell = GetCell( xCenter, yCenter );
+         Cell centerCell = GetCell( xCenter, yCenter );
          borderCells.Remove( centerCell );
 
          return borderCells;
@@ -674,7 +648,7 @@ namespace RogueSharp
       /// </summary>
       /// <param name="rowNumbers">Integer array of row numbers with 0 as the top</param>
       /// <returns>IEnumerable of all the Cells in the specified row numbers</returns>
-      public IEnumerable<ICell> GetCellsInRows( params int[] rowNumbers )
+      public IEnumerable<Cell> GetCellsInRows( params int[] rowNumbers )
       {
          foreach ( int y in rowNumbers )
          {
@@ -690,7 +664,7 @@ namespace RogueSharp
       /// </summary>
       /// <param name="columnNumbers">Integer array of column numbers with 0 as the farthest left</param>
       /// <returns>IEnumerable of all the Cells in the specified column numbers</returns>
-      public IEnumerable<ICell> GetCellsInColumns( params int[] columnNumbers )
+      public IEnumerable<Cell> GetCellsInColumns( params int[] columnNumbers )
       {
          foreach ( int x in columnNumbers )
          {
@@ -707,10 +681,11 @@ namespace RogueSharp
       /// <param name="x">X location of the Cell to get starting with 0 as the farthest left</param>
       /// <param name="y">Y location of the Cell to get, starting with 0 as the top</param>
       /// <returns>Cell at the specified location</returns>
-      public ICell GetCell( int x, int y )
+      public Cell GetCell( int x, int y )
       {
          return new Cell( x, y, _isTransparent[x, y], _isWalkable[x, y], _fieldOfView.IsInFov( x, y ), _isExplored[x, y] );
       }
+      public Cell GetCell(Coord coord) => GetCell(coord.X, coord.Y);
 
       /// <summary>
       /// Provides a simple visual representation of the map using the following symbols:
@@ -726,12 +701,11 @@ namespace RogueSharp
       {
          var mapRepresentation = new StringBuilder();
          int lastY = 0;
-         foreach ( ICell iCell in GetAllCells() )
+         foreach ( Cell cell in GetAllCells() )
          {
-            Cell cell = (Cell) iCell;
-            if ( cell.Y != lastY )
+            if ( cell.Coord.Y != lastY )
             {
-               lastY = cell.Y;
+               lastY = cell.Coord.Y;
                mapRepresentation.Append( Environment.NewLine );
             }
             mapRepresentation.Append( cell.ToString( useFov ) );
@@ -750,7 +724,7 @@ namespace RogueSharp
          mapState.Width = Width;
          mapState.Height = Height;
          mapState.Cells = new MapState.CellProperties[Width * Height];
-         foreach ( ICell cell in GetAllCells() )
+         foreach ( Cell cell in GetAllCells() )
          {
             var cellProperties = MapState.CellProperties.None;
             if ( cell.IsInFov )
@@ -765,7 +739,7 @@ namespace RogueSharp
             {
                cellProperties |= MapState.CellProperties.Walkable;
             }
-            mapState.Cells[cell.Y * Width + cell.X] = cellProperties;
+            mapState.Cells[cell.Coord.Y * Width + cell.Coord.X] = cellProperties;
          }
          return mapState;
       }
@@ -785,15 +759,15 @@ namespace RogueSharp
          var inFov = new HashSet<int>();
 
          Initialize( state.Width, state.Height );
-         foreach ( ICell cell in GetAllCells() )
+         foreach ( Cell cell in GetAllCells() )
          {
-            MapState.CellProperties cellProperties = state.Cells[cell.Y * Width + cell.X];
+            MapState.CellProperties cellProperties = state.Cells[cell.Coord.Y * Width + cell.Coord.X];
             if ( cellProperties.HasFlag( MapState.CellProperties.Visible ) )
             {
-               inFov.Add( IndexFor( cell.X, cell.Y ) );
+               inFov.Add( IndexFor( cell.Coord ) );
             }
-            _isTransparent[cell.X, cell.Y] = cellProperties.HasFlag( MapState.CellProperties.Transparent );
-            _isWalkable[cell.X, cell.Y] = cellProperties.HasFlag( MapState.CellProperties.Walkable );
+            _isTransparent[cell.Coord.X, cell.Coord.Y] = cellProperties.HasFlag( MapState.CellProperties.Transparent );
+            _isWalkable[cell.Coord.X, cell.Coord.Y] = cellProperties.HasFlag( MapState.CellProperties.Walkable );
          }
 
          _fieldOfView = new FieldOfView( this, inFov );
@@ -824,7 +798,7 @@ namespace RogueSharp
       /// </summary>
       /// <param name="index">The single dimensional array index for the Cell that we want to get</param>
       /// <returns>Cell at the specified single dimensional array index</returns>
-      public ICell CellFor( int index )
+      public Cell CellFor( int index )
       {
          int x = index % Width;
          int y = index / Width;
@@ -849,32 +823,27 @@ namespace RogueSharp
       /// <param name="cell">The Cell to get the index for</param>
       /// <returns>An index for the Cell which is useful if storing Cells in a single dimensional array</returns>
       /// <exception cref="ArgumentNullException">Thrown on null cell</exception>
-      public int IndexFor(ICoord cell)
+      public int IndexFor(Coord cell)
       {
-         if (cell == null)
-         {
-            throw new ArgumentNullException("cell", "Cell cannot be null");
-         }
-
          return (cell.Y * Width) + cell.X;
       }
 
-      private bool AddToHashSet( HashSet<int> hashSet, int x, int y, out ICell cell )
+      private bool AddToHashSet( HashSet<int> hashSet, int x, int y, out Cell cell )
       {
          cell = GetCell( x, y );
-         return hashSet.Add( IndexFor( cell ) );
+         return hashSet.Add( IndexFor( cell.Coord ) );
       }
 
-      private bool AddToHashSet( HashSet<int> hashSet, int x, int y, ICell centerCell, out ICell cell )
+      private bool AddToHashSet( HashSet<int> hashSet, int x, int y, Cell centerCell, out Cell cell )
       {
          cell = GetCell( x, y );
          if ( cell.Equals( centerCell ) ) return false;
-         return hashSet.Add( IndexFor( cell ) );
+         return hashSet.Add( IndexFor( cell.Coord ) );
       }
 
-      private bool AddToHashSet( HashSet<int> hashSet, ICell cell )
+      private bool AddToHashSet( HashSet<int> hashSet, Cell cell )
       {
-         return hashSet.Add( IndexFor( cell ) );
+         return hashSet.Add( IndexFor( cell.Coord ) );
       }
 
       /// <summary>

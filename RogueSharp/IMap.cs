@@ -86,10 +86,10 @@ namespace RogueSharp
       /// <returns>True if the Cell has been flagged as being explored by the player, false otherwise</returns>
       bool IsExplored( int x, int y );
 
-      void SetIsWalkable(ICoord coord, bool isWalkable);
-      void SetIsExplored(ICoord coord, bool isExplored);
-      void SetIsTransparent(ICoord coord, bool isTransparent);
-      bool IsWithinMap(ICoord coord);
+      void SetIsWalkable(Coord coord, bool isWalkable);
+      void SetIsExplored(Coord coord, bool isExplored);
+      void SetIsTransparent(Coord coord, bool isTransparent);
+      bool IsWithinMap(Coord coord);
 
       /// <summary>
       /// Set the properties of a Cell to the specified values
@@ -102,7 +102,7 @@ namespace RogueSharp
       /// <param name="isTransparent">True if line-of-sight is not blocked by this Cell. False otherwise</param>
       /// <param name="isWalkable">True if a character could walk across the Cell normally. False otherwise</param>
       /// <param name="isExplored">Optional parameter defaults to false if not provided. True if the Cell has ever been in the field-of-view of the player. False otherwise</param>
-      void SetCellProperties( int x, int y, bool isTransparent, bool isWalkable, bool isExplored );
+      //void SetCellProperties( int x, int y, bool isTransparent, bool isWalkable, bool isExplored );
 
       /// <summary>
       /// Set the properties of an unexplored Cell to the specified values
@@ -114,7 +114,7 @@ namespace RogueSharp
       /// <param name="y">Y location of the Cell to set properties on, starting with 0 as the top</param>
       /// <param name="isTransparent">True if line-of-sight is not blocked by this Cell. False otherwise</param>
       /// <param name="isWalkable">True if a character could walk across the Cell normally. False otherwise</param>
-      void SetCellProperties( int x, int y, bool isTransparent, bool isWalkable );
+      //void SetCellProperties( int x, int y, bool isTransparent, bool isWalkable );
 
       /// <summary>
       /// Sets the properties of all Cells in the Map to be transparent and walkable
@@ -158,7 +158,7 @@ namespace RogueSharp
       /// <param name="radius">The number of Cells in which the field-of-view extends from the origin Cell. Think of this as the intensity of the light source.</param>
       /// <param name="lightWalls">True if walls should be included in the field-of-view when they are within the radius of the light source. False excludes walls even when they are within range.</param>
       /// <returns>List of Cells representing what is observable in the Map based on the specified parameters</returns>
-      ReadOnlyCollection<ICell> ComputeFov( int xOrigin, int yOrigin, int radius, bool lightWalls );
+      ReadOnlyCollection<Cell> ComputeFov( int xOrigin, int yOrigin, int radius, bool lightWalls );
 
       /// <summary>
       /// Performs a field-of-view calculation with the specified parameters and appends it any existing field-of-view calculations.
@@ -173,13 +173,13 @@ namespace RogueSharp
       /// <param name="radius">The number of Cells in which the field-of-view extends from the origin Cell. Think of this as the intensity of the light source.</param>
       /// <param name="lightWalls">True if walls should be included in the field-of-view when they are within the radius of the light source. False excludes walls even when they are within range.</param>
       /// <returns>List of Cells representing what is observable in the Map based on the specified parameters</returns>
-      ReadOnlyCollection<ICell> AppendFov( int xOrigin, int yOrigin, int radius, bool lightWalls );
+      ReadOnlyCollection<Cell> AppendFov( int xOrigin, int yOrigin, int radius, bool lightWalls );
 
       /// <summary>
       /// Get an IEnumerable of all Cells in the Map
       /// </summary>
       /// <returns>IEnumerable of all Cells in the Map</returns>
-      IEnumerable<ICell> GetAllCells();
+      IEnumerable<Cell> GetAllCells();
 
       /// <summary>
       /// Get an IEnumerable of Cells in a line from the Origin Cell to the Destination Cell
@@ -191,7 +191,7 @@ namespace RogueSharp
       /// <param name="xDestination">X location of the Destination Cell at the end of the line with 0 as the farthest left</param>
       /// <param name="yDestination">Y location of the Destination Cell at the end of the line with 0 as the top</param>
       /// <returns>IEnumerable of Cells in a line from the Origin Cell to the Destination Cell which includes the Origin and Destination Cells</returns>
-      IEnumerable<ICell> GetCellsAlongLine( int xOrigin, int yOrigin, int xDestination, int yDestination );
+      IEnumerable<Cell> GetCellsAlongLine( int xOrigin, int yOrigin, int xDestination, int yDestination );
 
       /// <summary>
       /// Get an IEnumerable of Cells in a circle around the center Cell up to the specified radius using Bresenham's midpoint circle algorithm
@@ -201,7 +201,7 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="radius">The number of Cells to get in a radius from the center Cell</param>
       /// <returns>IEnumerable of Cells in a circle around the center Cell</returns>
-      IEnumerable<ICell> GetCellsInCircle( int xCenter, int yCenter, int radius );
+      IEnumerable<Cell> GetCellsInCircle( int xCenter, int yCenter, int radius );
 
       /// <summary>
       /// Get an IEnumerable of Cells in a diamond (Rhombus) shape around the center Cell up to the specified distance
@@ -210,7 +210,7 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="distance">The number of Cells to get in a distance from the center Cell</param>
       /// <returns>IEnumerable of Cells in a diamond (Rhombus) shape around the center Cell</returns>
-      IEnumerable<ICell> GetCellsInDiamond( int xCenter, int yCenter, int distance );
+      IEnumerable<Cell> GetCellsInDiamond( int xCenter, int yCenter, int distance );
 
       /// <summary>
       /// Get an IEnumerable of Cells in a square area around the center Cell up to the specified distance
@@ -219,7 +219,8 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="distance">The number of Cells to get in each direction from the center Cell</param>
       /// <returns>IEnumerable of Cells in a square area around the center Cell</returns>
-      IEnumerable<ICell> GetCellsInSquare( int xCenter, int yCenter, int distance );
+      IEnumerable<Cell> GetCellsInSquare(int xCenter, int yCenter, int distance);
+      IEnumerable<Coord> GetCoordsInSquare( int xCenter, int yCenter, int distance );
 
       /// <summary>
       /// Get an IEnumerable of outermost border Cells in a circle around the center Cell up to the specified radius using Bresenham's midpoint circle algorithm
@@ -229,7 +230,7 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="radius">The number of Cells to get in a radius from the center Cell</param>
       /// <returns>IEnumerable of outermost border Cells in a circle around the center Cell</returns>
-      IEnumerable<ICell> GetBorderCellsInCircle( int xCenter, int yCenter, int radius );
+      IEnumerable<Cell> GetBorderCellsInCircle( int xCenter, int yCenter, int radius );
 
       /// <summary>
       /// Get an IEnumerable of outermost border Cells in a diamond (Rhombus) shape around the center Cell up to the specified distance
@@ -238,7 +239,7 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="distance">The number of Cells to get in a distance from the center Cell</param>
       /// <returns>IEnumerable of outermost border Cells in a diamond (Rhombus) shape around the center Cell</returns>
-      IEnumerable<ICell> GetBorderCellsInDiamond( int xCenter, int yCenter, int distance );
+      IEnumerable<Cell> GetBorderCellsInDiamond( int xCenter, int yCenter, int distance );
 
       /// <summary>
       /// Get an IEnumerable of outermost border Cells in a square area around the center Cell up to the specified distance
@@ -247,21 +248,21 @@ namespace RogueSharp
       /// <param name="yCenter">Y location of the center Cell with 0 as the top</param>
       /// <param name="distance">The number of Cells to get in each direction from the center Cell</param>
       /// <returns>IEnumerable of outermost border Cells in a square area around the center Cell</returns>
-      IEnumerable<ICell> GetBorderCellsInSquare( int xCenter, int yCenter, int distance );
+      IEnumerable<Cell> GetBorderCellsInSquare( int xCenter, int yCenter, int distance );
 
       /// <summary>
       /// Get an IEnumerable of all the Cells in the specified row numbers
       /// </summary>
       /// <param name="rowNumbers">Integer array of row numbers with 0 as the top</param>
       /// <returns>IEnumerable of all the Cells in the specified row numbers</returns>
-      IEnumerable<ICell> GetCellsInRows( params int[] rowNumbers );
+      IEnumerable<Cell> GetCellsInRows( params int[] rowNumbers );
 
       /// <summary>
       /// Get an IEnumerable of all the Cells in the specified column numbers
       /// </summary>
       /// <param name="columnNumbers">Integer array of column numbers with 0 as the farthest left</param>
       /// <returns>IEnumerable of all the Cells in the specified column numbers</returns>
-      IEnumerable<ICell> GetCellsInColumns( params int[] columnNumbers );
+      IEnumerable<Cell> GetCellsInColumns( params int[] columnNumbers );
 
       /// <summary>
       /// Get a Cell at the specified location
@@ -269,7 +270,8 @@ namespace RogueSharp
       /// <param name="x">X location of the Cell to get starting with 0 as the farthest left</param>
       /// <param name="y">Y location of the Cell to get, starting with 0 as the top</param>
       /// <returns>Cell at the specified location</returns>
-      ICell GetCell( int x, int y );
+      Cell GetCell( int x, int y );
+      Cell GetCell(Coord coord);
 
       /// <summary>
       /// Provides a simple visual representation of the map using the following symbols:
@@ -301,7 +303,7 @@ namespace RogueSharp
       /// </summary>
       /// <param name="index">The single dimensional array index for the Cell that we want to get</param>
       /// <returns>Cell at the specified single dimensional array index</returns>
-      ICell CellFor( int index );
+      Cell CellFor( int index );
 
       /// <summary>
       /// Get the single dimensional array index for a Cell at the specified location using the formula: index = ( y * Width ) + x
@@ -316,7 +318,7 @@ namespace RogueSharp
       /// </summary>
       /// <param name="cell">The Cell to get the index for</param>
       /// <returns>An index for the Cell which is useful if storing Cells in a single dimensional array</returns>
-      int IndexFor( ICoord cell );
+      int IndexFor( Coord cell );
    }
 
    /// <summary>

@@ -590,15 +590,15 @@ namespace RogueSharp
       {
          private readonly GoalMap _goalMap;
          private readonly List<Path> _paths;
-         private readonly Stack<ICell> _currentPath;
-         private readonly HashSet<ICell> _visited;
+         private readonly Stack<Cell> _currentPath;
+         private readonly HashSet<Cell> _visited;
 
          public GoalMapPathFinder( GoalMap goalMap )
          {
             _goalMap = goalMap;
             _paths = new List<Path>();
-            _currentPath = new Stack<ICell>();
-            _visited = new HashSet<ICell>();
+            _currentPath = new Stack<Cell>();
+            _visited = new HashSet<Cell>();
          }
 
          public ReadOnlyCollection<Path> FindPaths( int x, int y )

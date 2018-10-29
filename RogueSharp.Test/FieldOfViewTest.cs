@@ -43,7 +43,7 @@ namespace RogueSharp.Test
 
          int floorCells = 0;
          int wallCells = 0;
-         foreach ( ICell cell in visibleCells )
+         foreach ( Cell cell in visibleCells )
          {
             if ( cell.IsWalkable )
             {
@@ -97,7 +97,7 @@ namespace RogueSharp.Test
 
          int floorCells = 0;
          int wallCells = 0;
-         foreach ( ICell cell in visibleCells )
+         foreach ( Cell cell in visibleCells )
          {
             if ( cell.IsWalkable )
             {

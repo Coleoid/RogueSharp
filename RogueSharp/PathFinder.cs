@@ -27,16 +27,16 @@ namespace RogueSharp
 
          _map = map;
          _graph = new EdgeWeightedDigraph( _map.Width * _map.Height );
-         foreach ( ICell cell in _map.GetAllCells() )
+         foreach ( Cell cell in _map.GetAllCells() )
          {
             if ( cell.IsWalkable )
             {
-               int v = IndexFor( cell );
-               foreach ( ICell neighbor in _map.GetBorderCellsInDiamond( cell.X, cell.Y, 1 ) )
+               int v = IndexFor( cell.Coord );
+               foreach ( Cell neighbor in _map.GetBorderCellsInDiamond( cell.Coord.X, cell.Coord.Y, 1 ) )
                {
                   if ( neighbor.IsWalkable )
                   {
-                     int w = IndexFor( neighbor );
+                     int w = IndexFor( neighbor.Coord );
                      _graph.AddEdge( new DirectedEdge( v, w, 1.0 ) );
                      _graph.AddEdge( new DirectedEdge( w, v, 1.0 ) );
                   }
@@ -64,17 +64,17 @@ namespace RogueSharp
 
          _map = map;
          _graph = new EdgeWeightedDigraph(_map.Width * _map.Height);
-         foreach (ICell cell in _map.GetAllCells())
+         foreach (Cell cell in _map.GetAllCells())
          {
             if (cell.IsWalkable)
             {
-               int v = IndexFor(cell);
-               foreach (ICell neighbor in _map.GetBorderCellsInSquare(cell.X, cell.Y, 1))
+               int v = IndexFor(cell.Coord);
+               foreach (Cell neighbor in _map.GetBorderCellsInSquare(cell.Coord.X, cell.Coord.Y, 1))
                {
                   if (neighbor.IsWalkable)
                   {
-                     int w = IndexFor(neighbor);
-                     if (neighbor.X != cell.X && neighbor.Y != cell.Y)
+                     int w = IndexFor(neighbor.Coord);
+                     if (neighbor.Coord.X != cell.Coord.X && neighbor.Coord.Y != cell.Coord.Y)
                      {
                         _graph.AddEdge(new DirectedEdge(v, w, diagonalCost));
                         _graph.AddEdge(new DirectedEdge(w, v, diagonalCost));
@@ -95,21 +95,21 @@ namespace RogueSharp
          _map = map ?? throw new ArgumentNullException("map");
          _graph = new EdgeWeightedDigraph(_map.Width * _map.Height);
 
-         foreach (ICell cell in _map.GetAllCells())
+         foreach (Cell cell in _map.GetAllCells())
          {
             if (!cell.IsWalkable) continue;
 
-            int cellIndex = IndexFor(cell);
-            var neighborCoords = new List<(ICoord,double)>
+            int cellIndex = IndexFor(cell.Coord);
+            var neighborCoords = new List<(Coord,double)>
             {
-               (new Coord(cell.X + 0, cell.Y - 1), cardinalCost),
-               (new Coord(cell.X + 0, cell.Y + 1), cardinalCost),
-               (new Coord(cell.X + 1, cell.Y + 0), cardinalCost),
-               (new Coord(cell.X - 1, cell.Y + 0), cardinalCost),
-               (new Coord(cell.X - 1, cell.Y - 1), diagonalCost),
-               (new Coord(cell.X - 1, cell.Y + 1), diagonalCost),
-               (new Coord(cell.X + 1, cell.Y - 1), diagonalCost),
-               (new Coord(cell.X + 1, cell.Y + 1), diagonalCost),
+               (new Coord(cell.Coord.X + 0, cell.Coord.Y - 1), cardinalCost),
+               (new Coord(cell.Coord.X + 0, cell.Coord.Y + 1), cardinalCost),
+               (new Coord(cell.Coord.X + 1, cell.Coord.Y + 0), cardinalCost),
+               (new Coord(cell.Coord.X - 1, cell.Coord.Y + 0), cardinalCost),
+               (new Coord(cell.Coord.X - 1, cell.Coord.Y - 1), diagonalCost),
+               (new Coord(cell.Coord.X - 1, cell.Coord.Y + 1), diagonalCost),
+               (new Coord(cell.Coord.X + 1, cell.Coord.Y - 1), diagonalCost),
+               (new Coord(cell.Coord.X + 1, cell.Coord.Y + 1), diagonalCost),
             };
 
             foreach (var (coord, cost) in neighborCoords)
@@ -131,13 +131,13 @@ namespace RogueSharp
       /// <exception cref="ArgumentNullException">Thrown when source or destination is null</exception>
       /// <exception cref="PathNotFoundException">Thrown when there is not a path from the source to the destination</exception>
       /// <returns>Returns a shortest Path containing a list of Cells from a specified source Cell to a destination Cell</returns>
-      public Path ShortestPath( ICell source, ICell destination )
+      public Path ShortestPath( Cell source, Cell destination )
       {
          Path shortestPath = TryFindShortestPath( source, destination );
 
          if ( shortestPath == null )
          {
-            throw new PathNotFoundException( string.Format( "Path from ({0}, {1}) to ({2}, {3}) not found", source.X, source.Y, destination.X, destination.Y ) );
+            throw new PathNotFoundException( string.Format( "Path from ({0}, {1}) to ({2}, {3}) not found", source.Coord.X, source.Coord.Y, destination.Coord.X, destination.Coord.Y ) );
          }
 
          return shortestPath;
@@ -150,7 +150,7 @@ namespace RogueSharp
       /// <param name="destination">The Cell which is at the end of the path</param>
       /// <exception cref="ArgumentNullException">Thrown when source or destination is null</exception>
       /// <returns>Returns a shortest Path containing a list of Cells from a specified source Cell to a destination Cell. If no path is found null will be returned</returns>
-      public Path TryFindShortestPath( ICell source, ICell destination )
+      public Path TryFindShortestPath( Cell source, Cell destination )
       {
          if ( source == null )
          {
@@ -170,9 +170,9 @@ namespace RogueSharp
          return new Path( cells );
       }
 
-      public List<ICell> ShortestPathList(ICell source, ICell destination)
+      public List<Coord> ShortestPathList(Coord source, Coord destination)
       {
-         var list = new List<ICell>();
+         var list = new List<Coord>();
          IEnumerable<DirectedEdge> path = DijkstraShortestPath
             .FindPath(_graph, IndexFor(source), IndexFor(destination));
 
@@ -180,16 +180,16 @@ namespace RogueSharp
 
          foreach (DirectedEdge edge in path)
          {
-            list.Add(CellFor(edge.To));
+            list.Add(CoordFor(edge.To));
          }
 
          return list;
       }
 
-      private IEnumerable<ICell> ShortestPathCells(ICell source, ICell destination)
+      private IEnumerable<Cell> ShortestPathCells(Cell source, Cell destination)
       {
          IEnumerable<DirectedEdge> path = DijkstraShortestPath
-            .FindPath(_graph, IndexFor(source), IndexFor(destination));
+            .FindPath(_graph, IndexFor(source.Coord), IndexFor(destination.Coord));
          if (path == null) yield break;
 
          yield return source;
@@ -199,17 +199,25 @@ namespace RogueSharp
          }
       }
 
-      private int IndexFor( ICoord cell )
+      private int IndexFor( Coord cell )
       {
          return ( cell.Y * _map.Width ) + cell.X;
       }
 
-      private ICell CellFor( int index )
+      private Coord CoordFor(int index)
       {
          int x = index % _map.Width;
          int y = index / _map.Width;
 
-         return _map.GetCell( x, y );
+         return new Coord(x, y);
+      }
+
+      private Cell CellFor(int index)
+      {
+         int x = index % _map.Width;
+         int y = index / _map.Width;
+
+         return _map.GetCell(x, y);
       }
    }
 }

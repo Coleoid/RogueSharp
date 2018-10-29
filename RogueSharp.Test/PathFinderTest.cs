@@ -22,44 +22,6 @@ namespace RogueSharp.Test
       }
 
       [TestMethod]
-      [ExpectedException( typeof( ArgumentNullException ) )]
-      public void ShortestPath_SourceIsNull_ThrowsArgumentNullException()
-      {
-         string mapRepresentation = @"########
-                                      #....#.#
-                                      #.#..#.#
-                                      #.#..#.#
-                                      #......#
-                                      ########";
-         IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
-         IMap map = Map.Create( mapCreationStrategy );
-         PathFinder pathFinder = new PathFinder( map );
-         ICell source = null;
-         ICell destination = map.GetCell( 5, 4 );
-
-         Path shortestPath = pathFinder.ShortestPath( source, destination );
-      }
-
-      [TestMethod]
-      [ExpectedException( typeof( ArgumentNullException ) )]
-      public void ShortestPath_DestinationIsNull_ThrowsArgumentNullException()
-      {
-         string mapRepresentation = @"########
-                                      #....#.#
-                                      #.#..#.#
-                                      #.#..#.#
-                                      #......#
-                                      ########";
-         IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
-         IMap map = Map.Create( mapCreationStrategy );
-         PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 1, 4 );
-         ICell destination = null;
-
-         Path shortestPath = pathFinder.ShortestPath( source, destination );
-      }
-
-      [TestMethod]
       public void ShortestPath_DestinationReachableFromSource_ExpectedPath()
       {
          string mapRepresentation = @"########
@@ -71,8 +33,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 1, 4 );
-         ICell destination = map.GetCell( 5, 4 );
+         Cell source = map.GetCell( 1, 4 );
+         Cell destination = map.GetCell( 5, 4 );
 
          Path shortestPath = pathFinder.ShortestPath( source, destination );
 
@@ -94,8 +56,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map, 1.41 );
-         ICell source = map.GetCell( 1, 1 );
-         ICell destination = map.GetCell( 6, 4 );
+         Cell source = map.GetCell( 1, 1 );
+         Cell destination = map.GetCell( 6, 4 );
 
          Path shortestPath = pathFinder.ShortestPath( source, destination );
 
@@ -119,8 +81,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 0, 1 );
-         ICell destination = map.GetCell( 1, 1 );
+         Cell source = map.GetCell( 0, 1 );
+         Cell destination = map.GetCell( 1, 1 );
 
          pathFinder.ShortestPath( source, destination );
       }
@@ -138,8 +100,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 1, 1 );
-         ICell destination = map.GetCell( 0, 1 );
+         Cell source = map.GetCell( 1, 1 );
+         Cell destination = map.GetCell( 0, 1 );
 
          pathFinder.ShortestPath( source, destination );
       }
@@ -157,8 +119,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 1, 1 );
-         ICell destination = map.GetCell( 6, 1 );
+         Cell source = map.GetCell( 1, 1 );
+         Cell destination = map.GetCell( 6, 1 );
 
          pathFinder.ShortestPath( source, destination );
       }
@@ -175,8 +137,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 1, 4 );
-         ICell destination = map.GetCell( 5, 4 );
+         Cell source = map.GetCell( 1, 4 );
+         Cell destination = map.GetCell( 5, 4 );
 
          Path shortestPath = pathFinder.TryFindShortestPath( source, destination );
 
@@ -198,8 +160,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map, 1.41 );
-         ICell source = map.GetCell( 1, 1 );
-         ICell destination = map.GetCell( 6, 4 );
+         Cell source = map.GetCell( 1, 1 );
+         Cell destination = map.GetCell( 6, 4 );
 
          Path shortestPath = pathFinder.TryFindShortestPath( source, destination );
 
@@ -208,44 +170,6 @@ namespace RogueSharp.Test
          Assert.AreEqual( destination, shortestPath.End );
          Assert.AreEqual( map.GetCell( 2, 1 ), shortestPath.StepForward() );
          Assert.AreEqual( map.GetCell( 3, 2 ), shortestPath.StepForward() );
-      }
-
-      [TestMethod]
-      [ExpectedException( typeof( ArgumentNullException ) )]
-      public void TryFindShortestPath_SourceIsNull_ThrowsArgumentNullException()
-      {
-         string mapRepresentation = @"########
-                                      #....#.#
-                                      #.#..#.#
-                                      #.#..#.#
-                                      #......#
-                                      ########";
-         IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
-         IMap map = Map.Create( mapCreationStrategy );
-         PathFinder pathFinder = new PathFinder( map );
-         ICell source = null;
-         ICell destination = map.GetCell( 5, 4 );
-
-         Path shortestPath = pathFinder.TryFindShortestPath( source, destination );
-      }
-
-      [TestMethod]
-      [ExpectedException( typeof( ArgumentNullException ) )]
-      public void TryFindShortestPath_DestinationIsNull_ThrowsArgumentNullException()
-      {
-         string mapRepresentation = @"########
-                                      #....#.#
-                                      #.#..#.#
-                                      #.#..#.#
-                                      #......#
-                                      ########";
-         IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
-         IMap map = Map.Create( mapCreationStrategy );
-         PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 1, 4 );
-         ICell destination = null;
-
-         Path shortestPath = pathFinder.TryFindShortestPath( source, destination );
       }
 
       [TestMethod]
@@ -260,8 +184,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 0, 1 );
-         ICell destination = map.GetCell( 1, 1 );
+         Cell source = map.GetCell( 0, 1 );
+         Cell destination = map.GetCell( 1, 1 );
 
          Path shortestPath = pathFinder.TryFindShortestPath( source, destination );
 
@@ -280,8 +204,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 1, 1 );
-         ICell destination = map.GetCell( 0, 1 );
+         Cell source = map.GetCell( 1, 1 );
+         Cell destination = map.GetCell( 0, 1 );
 
          Path shortestPath = pathFinder.TryFindShortestPath( source, destination );
 
@@ -300,8 +224,8 @@ namespace RogueSharp.Test
          IMapCreationStrategy<Map> mapCreationStrategy = new StringDeserializeMapCreationStrategy<Map>( mapRepresentation );
          IMap map = Map.Create( mapCreationStrategy );
          PathFinder pathFinder = new PathFinder( map );
-         ICell source = map.GetCell( 1, 1 );
-         ICell destination = map.GetCell( 6, 1 );
+         Cell source = map.GetCell( 1, 1 );
+         Cell destination = map.GetCell( 6, 1 );
 
          Path shortestPath = pathFinder.TryFindShortestPath( source, destination );
 

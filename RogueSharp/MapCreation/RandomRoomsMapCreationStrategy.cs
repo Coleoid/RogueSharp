@@ -132,7 +132,9 @@ namespace RogueSharp.MapCreation
          {
             for ( int y = room.Top + 1; y < room.Bottom; y++ )
             {
-               map.SetCellProperties( x, y, true, true );
+               var coord = new Coord(x, y);
+               map.SetIsTransparent(coord, true);
+               map.SetIsWalkable(coord, true);
             }
          }
       }
@@ -141,7 +143,9 @@ namespace RogueSharp.MapCreation
       {
          for ( int x = Math.Min( xStart, xEnd ); x <= Math.Max( xStart, xEnd ); x++ )
          {
-            map.SetCellProperties( x, yPosition, true, true );
+            var coord = new Coord(x, yPosition);
+            map.SetIsTransparent(coord, true);
+            map.SetIsWalkable(coord, true);
          }
       }
 
@@ -149,7 +153,9 @@ namespace RogueSharp.MapCreation
       {
          for ( int y = Math.Min( yStart, yEnd ); y <= Math.Max( yStart, yEnd ); y++ )
          {
-            map.SetCellProperties( xPosition, y, true, true );
+            var coord = new Coord(xPosition, y);
+            map.SetIsTransparent(coord, true);
+            map.SetIsWalkable(coord, true);
          }
       }
    }
