@@ -61,9 +61,9 @@ namespace RogueSharp
       {
          return _inFov.Contains(_map.IndexFor(x, y));
       }
-      public bool IsInFov(Coord coord)
+      public bool IsInFov(Point point)
       {
-         return _inFov.Contains(_map.IndexFor(coord));
+         return _inFov.Contains(_map.IndexFor(point));
       }
 
       /// <summary>
@@ -99,10 +99,10 @@ namespace RogueSharp
       {
          foreach ( Cell borderCell in _map.GetBorderCellsInSquare( xOrigin, yOrigin, radius ) )
          {
-            foreach ( Cell cell in _map.GetCellsAlongLine( xOrigin, yOrigin, borderCell.Coord.X, borderCell.Coord.Y ) )
+            foreach ( Cell cell in _map.GetCellsAlongLine( xOrigin, yOrigin, borderCell.Point.X, borderCell.Point.Y ) )
             {
-               var xDist = cell.Coord.X - xOrigin;
-               var yDist = cell.Coord.Y - yOrigin;
+               var xDist = cell.Point.X - xOrigin;
+               var yDist = cell.Point.Y - yOrigin;
                var dist = Math.Sqrt(xDist * xDist + yDist * yDist);
                if ( dist - .5 > radius )
                {
@@ -110,13 +110,13 @@ namespace RogueSharp
                }
                if ( cell.IsTransparent )
                {
-                  _inFov.Add( _map.IndexFor( cell.Coord ) );
+                  _inFov.Add( _map.IndexFor( cell.Point ) );
                }
                else
                {
                   if ( lightWalls )
                   {
-                     _inFov.Add( _map.IndexFor( cell.Coord ) );
+                     _inFov.Add( _map.IndexFor( cell.Point ) );
                   }
                   break;
                }
@@ -127,7 +127,7 @@ namespace RogueSharp
          {
             // Post processing step created based on the algorithm at this website:
             // https://sites.google.com/site/jicenospam/visibilitydetermination
-            foreach ( Coord coord in _map.GetCoordsInSquare( xOrigin, yOrigin, radius ) )
+            foreach ( Point coord in _map.GetCoordsInSquare( xOrigin, yOrigin, radius ) )
             {
                if ( coord.X > xOrigin )
                {

@@ -168,7 +168,7 @@ namespace RogueSharp.Test
          foreach ( var step in path.Steps )
          {
             numberOfSteps++;
-            Assert.AreEqual( numberOfSteps, step.Coord.Y );
+            Assert.AreEqual( numberOfSteps, step.Point.Y );
          }
 
          Assert.AreEqual( 4, numberOfSteps );

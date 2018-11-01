@@ -97,10 +97,10 @@ namespace RogueSharp.MapCreation
          foreach (Cell cell in _map.GetAllCells())
          {
             bool isClear =
-               (!IsBorderCoord(cell.Coord) && _random.Next(1, 100) > _fillProbability);
+               (!IsBorderCoord(cell.Point) && _random.Next(1, 100) > _fillProbability);
 
-            _map.SetIsTransparent(cell.Coord, isClear);
-            _map.SetIsWalkable(cell.Coord, isClear);
+            _map.SetIsTransparent(cell.Point, isClear);
+            _map.SetIsWalkable(cell.Point, isClear);
          }
       }
 
@@ -110,13 +110,13 @@ namespace RogueSharp.MapCreation
 
          foreach ( Cell cell in _map.GetAllCells() )
          {
-            if (IsBorderCoord(cell.Coord)) continue;
+            if (IsBorderCoord(cell.Point)) continue;
 
             bool isClear =
-               !(CountWallsNear(cell.Coord, 1) >= 5) || (CountWallsNear(cell.Coord, 2) <= 2);
+               !(CountWallsNear(cell.Point, 1) >= 5) || (CountWallsNear(cell.Point, 2) <= 2);
 
-            updatedMap.SetIsTransparent(cell.Coord, isClear);
-            updatedMap.SetIsWalkable(cell.Coord, isClear);
+            updatedMap.SetIsTransparent(cell.Point, isClear);
+            updatedMap.SetIsWalkable(cell.Point, isClear);
          }
 
          _map = updatedMap;
@@ -128,29 +128,29 @@ namespace RogueSharp.MapCreation
 
          foreach ( Cell cell in _map.GetAllCells() )
          {
-            if (IsBorderCoord(cell.Coord)) continue;
+            if (IsBorderCoord(cell.Point)) continue;
 
-            bool isClear = !(CountWallsNear(cell.Coord, 1) >= 5);
+            bool isClear = !(CountWallsNear(cell.Point, 1) >= 5);
 
-            updatedMap.SetIsTransparent(cell.Coord, isClear);
-            updatedMap.SetIsWalkable(cell.Coord, isClear);
+            updatedMap.SetIsTransparent(cell.Point, isClear);
+            updatedMap.SetIsWalkable(cell.Point, isClear);
          }
 
          _map = updatedMap;
       }
 
-      private bool IsBorderCoord( Coord coord )
+      private bool IsBorderCoord( Point point )
       {
-         return coord.X == 0 || coord.X == _map.Width - 1
-                || coord.Y == 0 || coord.Y == _map.Height - 1;
+         return point.X == 0 || point.X == _map.Width - 1
+                || point.Y == 0 || point.Y == _map.Height - 1;
       }
 
-      private int CountWallsNear(Coord coord, int distance)
+      private int CountWallsNear(Point point, int distance)
       {
          int count = 0;
-         foreach (Cell nearbyCell in _map.GetCellsInSquare(coord.X, coord.Y, distance))
+         foreach (Cell nearbyCell in _map.GetCellsInSquare(point.X, point.Y, distance))
          {
-            if (coord.Equals(nearbyCell.Coord)) continue;
+            if (point.Equals(nearbyCell.Point)) continue;
             if (!nearbyCell.IsWalkable) count++;
          }
 
@@ -266,13 +266,13 @@ namespace RogueSharp.MapCreation
             while ( stack.Count != 0 )
             {
                cell = stack.Pop();
-               if ( _visited[cell.Coord.Y][cell.Coord.X] || !cell.IsWalkable )
+               if ( _visited[cell.Point.Y][cell.Point.X] || !cell.IsWalkable )
                {
                   continue;
                }
                mapsection.AddCell( cell );
-               _visited[cell.Coord.Y][cell.Coord.X] = true;
-               //foreach ( Cell neighbor in GetNeighbors(cell.Coord) )
+               _visited[cell.Point.Y][cell.Point.X] = true;
+               //foreach ( Cell neighbor in GetNeighbors(cell.Point) )
                //{
                //   if ( cell.IsWalkable == neighbor.IsWalkable && !_visited[neighbor.Y][neighbor.X] )
                //   {
@@ -296,9 +296,9 @@ namespace RogueSharp.MapCreation
             return _map.GetCell( x, y );
          }
 
-         private IEnumerable<Coord> GetNeighbors( Coord cell )
+         private IEnumerable<Point> GetNeighbors( Point cell )
          {
-            List<Coord> neighbors = new List<Coord>(8);
+            List<Point> neighbors = new List<Point>(8);
             foreach (int[] offset in _offsets)
             {
                var neighbor = GetCell(cell.X + offset[0], cell.Y + offset[1]);
@@ -306,7 +306,7 @@ namespace RogueSharp.MapCreation
                {
                   continue;
                }
-               neighbors.Add( neighbor.Coord );
+               neighbors.Add( neighbor.Point );
             }
 
              return neighbors;
@@ -340,26 +340,26 @@ namespace RogueSharp.MapCreation
          public void AddCell( Cell cell )
          {
             Cells.Add( cell );
-            UpdateBounds( cell.Coord );
+            UpdateBounds( cell.Point );
          }
 
-         private void UpdateBounds( Coord coord )
+         private void UpdateBounds( Point point )
          {
-            if ( coord.X > _right )
+            if ( point.X > _right )
             {
-              _right = coord.X;
+              _right = point.X;
             }
-            if ( coord.X < _left )
+            if ( point.X < _left )
             {
-              _left = coord.X;
+              _left = point.X;
             }
-            if ( coord.Y > _bottom )
+            if ( point.Y > _bottom )
             {
-              _bottom = coord.Y;
+              _bottom = point.Y;
             }
-            if ( coord.Y < _top )
+            if ( point.Y < _top )
             {
-              _top = coord.Y;
+              _top = point.Y;
             }
          }
 

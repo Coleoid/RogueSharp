@@ -32,8 +32,8 @@ namespace RogueSharp.MapCreation
 
          foreach ( Cell cell in map.GetCellsInRows( 0, _height - 1 ) )
          {
-            map.SetIsWalkable( cell.Coord, false );
-            map.SetIsTransparent( cell.Coord, false);
+            map.SetIsWalkable( cell.Point, false );
+            map.SetIsTransparent( cell.Point, false);
          }
 
          //  was this a joke?

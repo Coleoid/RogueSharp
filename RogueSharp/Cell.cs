@@ -4,7 +4,7 @@
    public struct Cell
    {
       /// <summary> Where on the map we're describing </summary>
-      public Coord Coord { get; private set; }
+      public Point Point { get; private set; }
 
       /// <summary> Will a Field of View pass through this location? </summary>
       public bool IsTransparent { get; private set; }
@@ -20,7 +20,7 @@
 
       public Cell( int x, int y, bool isTransparent, bool isWalkable, bool isInFov, bool isExplored )
       {
-         Coord = new Coord(x, y);
+         Point = new Point(x, y);
          IsTransparent = isTransparent;
          IsWalkable = isWalkable;
          IsInFov = isInFov;
@@ -37,7 +37,7 @@
       /// <param name="isInFov">Is the Cell currently in the currently observable field-of-view</param>
       public Cell( int x, int y, bool isTransparent, bool isWalkable, bool isInFov )
       {
-         Coord = new Coord(x, y);
+         Point = new Point(x, y);
          IsTransparent = isTransparent;
          IsWalkable = isWalkable;
          IsInFov = isInFov;
@@ -111,7 +111,7 @@
          if (other == null) return false;
          if (ReferenceEquals(this, other)) return true;
 
-         return Coord.Equals(other.Coord)
+         return Point.Equals(other.Point)
             && IsTransparent == other.IsTransparent
             && IsWalkable == other.IsWalkable
             && IsInFov == other.IsInFov
@@ -171,8 +171,8 @@
       {
          unchecked
          {
-            var hashCode = Coord.X;
-            hashCode = ( hashCode * 397 ) ^ Coord.Y;
+            var hashCode = Point.X;
+            hashCode = ( hashCode * 397 ) ^ Point.Y;
             hashCode = ( hashCode * 397 ) ^ IsTransparent.GetHashCode();
             hashCode = ( hashCode * 397 ) ^ IsWalkable.GetHashCode();
             hashCode = ( hashCode * 397 ) ^ IsInFov.GetHashCode();

@@ -42,7 +42,7 @@ namespace RogueSharp.MapCreation
             string line = lines[y];
             for ( int x = 0; x < width; x++ )
             {
-               var coord = new Coord(x, y);
+               var coord = new Point(x, y);
                map.SetIsTransparent(coord, line[x] == '.' || line[x] == 'o');
                map.SetIsWalkable(coord, line[x] == '.' || line[x] == 's');
             }

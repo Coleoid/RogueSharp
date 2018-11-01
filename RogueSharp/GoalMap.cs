@@ -564,7 +564,7 @@ namespace RogueSharp
             }
             set
             {
-               _point.X = value;
+               //_point.X = value;
             }
          }
 
@@ -576,7 +576,7 @@ namespace RogueSharp
             }
             set
             {
-               _point.Y = value;
+               //_point.Y = value;
             }
          }
 

@@ -8,7 +8,7 @@ namespace RogueSharp
     //public interface ICell : IEquatable<ICell> //, ICoord
     //{
     //    /// <summary> Cartesian location of the ICell </summary>
-    //    Coord Coord { get; }
+    //    Point Point { get; }
 
     //    /// <summary>
     //    /// Get the transparency of the Cell i.e. if line of sight would be blocked by this Cell

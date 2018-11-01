@@ -86,10 +86,10 @@ namespace RogueSharp
       /// <returns>True if the Cell has been flagged as being explored by the player, false otherwise</returns>
       bool IsExplored( int x, int y );
 
-      void SetIsWalkable(Coord coord, bool isWalkable);
-      void SetIsExplored(Coord coord, bool isExplored);
-      void SetIsTransparent(Coord coord, bool isTransparent);
-      bool IsWithinMap(Coord coord);
+      void SetIsWalkable(Point point, bool isWalkable);
+      void SetIsExplored(Point point, bool isExplored);
+      void SetIsTransparent(Point point, bool isTransparent);
+      bool IsWithinMap(Point point);
 
       /// <summary>
       /// Set the properties of a Cell to the specified values
@@ -220,7 +220,7 @@ namespace RogueSharp
       /// <param name="distance">The number of Cells to get in each direction from the center Cell</param>
       /// <returns>IEnumerable of Cells in a square area around the center Cell</returns>
       IEnumerable<Cell> GetCellsInSquare(int xCenter, int yCenter, int distance);
-      IEnumerable<Coord> GetCoordsInSquare( int xCenter, int yCenter, int distance );
+      IEnumerable<Point> GetCoordsInSquare( int xCenter, int yCenter, int distance );
 
       /// <summary>
       /// Get an IEnumerable of outermost border Cells in a circle around the center Cell up to the specified radius using Bresenham's midpoint circle algorithm
@@ -271,7 +271,7 @@ namespace RogueSharp
       /// <param name="y">Y location of the Cell to get, starting with 0 as the top</param>
       /// <returns>Cell at the specified location</returns>
       Cell GetCell( int x, int y );
-      Cell GetCell(Coord coord);
+      Cell GetCell(Point point);
 
       /// <summary>
       /// Provides a simple visual representation of the map using the following symbols:
@@ -318,7 +318,7 @@ namespace RogueSharp
       /// </summary>
       /// <param name="cell">The Cell to get the index for</param>
       /// <returns>An index for the Cell which is useful if storing Cells in a single dimensional array</returns>
-      int IndexFor( Coord cell );
+      int IndexFor( Point cell );
    }
 
    /// <summary>

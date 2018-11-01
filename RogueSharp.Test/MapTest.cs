@@ -34,8 +34,8 @@ namespace RogueSharp.Test
 
          foreach ( Cell cell in map.GetAllCells() )
          {
-            Assert.IsTrue( map.IsTransparent( cell.Coord.X, cell.Coord.Y ) );
-            Assert.IsFalse( map.IsWalkable( cell.Coord.X, cell.Coord.Y ) );
+            Assert.IsTrue( map.IsTransparent( cell.Point.X, cell.Point.Y ) );
+            Assert.IsFalse( map.IsWalkable( cell.Point.X, cell.Point.Y ) );
          }
       }
 
@@ -339,8 +339,8 @@ namespace RogueSharp.Test
          string expectedCells = "##########..#####.....##..#..##.#.#.#";
 
          IEnumerable<Cell> cells = map.GetCellsInCircle( 3, 3, 3 )
-            .OrderBy( c => c.Coord.X )
-            .ThenBy( c => c.Coord.Y );
+            .OrderBy( c => c.Point.X )
+            .ThenBy( c => c.Point.Y );
          var actualCells = new StringBuilder();
          foreach ( Cell cell in cells )
          {
@@ -368,8 +368,8 @@ namespace RogueSharp.Test
          string expectedCells = "########.#.#.#.#";
 
          IEnumerable<Cell> cells = map.GetCellsInCircle(3, 3, 3)
-            .OrderBy(c => c.Coord.X)
-            .ThenBy(c => c.Coord.Y);
+            .OrderBy(c => c.Point.X)
+            .ThenBy(c => c.Point.Y);
 
          var actualCells = new StringBuilder();
          foreach ( Cell cell in cells )
@@ -398,8 +398,8 @@ namespace RogueSharp.Test
          string expectedCells = "##";
 
          IEnumerable<Cell> cells = map.GetBorderCellsInCircle(3, 3, 3)
-            .OrderBy(c => c.Coord.X)
-            .ThenBy(c => c.Coord.Y);
+            .OrderBy(c => c.Point.X)
+            .ThenBy(c => c.Point.Y);
 
          var actualCells = new StringBuilder();
          foreach ( Cell cell in cells )
@@ -428,8 +428,8 @@ namespace RogueSharp.Test
          string expectedCells = "#..##......#.";
 
          IEnumerable<Cell> cells = map.GetCellsInDiamond(3, 3, 3)
-            .OrderBy(c => c.Coord.X)
-            .ThenBy(c => c.Coord.Y);
+            .OrderBy(c => c.Point.X)
+            .ThenBy(c => c.Point.Y);
 
          var actualCells = new StringBuilder();
          foreach ( Cell cell in cells )
@@ -458,8 +458,8 @@ namespace RogueSharp.Test
          string expectedCells = "#.##..#.";
 
          IEnumerable<Cell> cells = map.GetBorderCellsInDiamond( 3, 3, 2 )
-            .OrderBy(c => c.Coord.X)
-            .ThenBy(c => c.Coord.Y);
+            .OrderBy(c => c.Point.X)
+            .ThenBy(c => c.Point.Y);
 
          var actualCells = new StringBuilder();
          foreach ( Cell cell in cells )
@@ -488,8 +488,8 @@ namespace RogueSharp.Test
          string expectedCells = "##";
 
          IEnumerable<Cell> cells = map.GetBorderCellsInDiamond( 0, 0, 1 )
-            .OrderBy(c => c.Coord.X)
-            .ThenBy(c => c.Coord.Y);
+            .OrderBy(c => c.Point.X)
+            .ThenBy(c => c.Point.Y);
 
          var actualCells = new StringBuilder();
          foreach ( Cell cell in cells )
@@ -518,8 +518,8 @@ namespace RogueSharp.Test
          string expectedCells = "######..###....#..#.##.#.";
 
          IEnumerable<Cell> cells = map.GetCellsInSquare( 3, 3, 2 )
-            .OrderBy(c => c.Coord.X)
-            .ThenBy(c => c.Coord.Y);
+            .OrderBy(c => c.Point.X)
+            .ThenBy(c => c.Point.Y);
 
          var actualCells = new StringBuilder();
          foreach ( Cell cell in cells )
@@ -548,8 +548,8 @@ namespace RogueSharp.Test
          string expectedCells = "########.#.##.#.";
 
          IEnumerable<Cell> cells = map.GetBorderCellsInSquare( 3, 3, 2 )
-            .OrderBy(c => c.Coord.X)
-            .ThenBy(c => c.Coord.Y);
+            .OrderBy(c => c.Point.X)
+            .ThenBy(c => c.Point.Y);
 
          var actualCells = new StringBuilder();
          foreach ( Cell cell in cells )
@@ -578,8 +578,8 @@ namespace RogueSharp.Test
          string expectedCells = "###";
 
          IEnumerable<Cell> cells = map.GetBorderCellsInSquare( 0, 0, 1 )
-            .OrderBy(c => c.Coord.X)
-            .ThenBy(c => c.Coord.Y);
+            .OrderBy(c => c.Point.X)
+            .ThenBy(c => c.Point.Y);
 
          var actualCells = new StringBuilder();
          foreach ( Cell cell in cells )
